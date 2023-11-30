@@ -15,12 +15,12 @@ const getEmployees = asyncHandler (async (req, res) => {
 const createEmployee = asyncHandler (async (req, res) => {
   console.log("The request body is:", req.body);
   const{employeeID, employeeName, employeeAge, employeeGender, employeeDOJ, employeeRemarks, employeeAcuredLeaves} = req.body;
-  if(!employeeID || !employeeName || !employeeAge || !employeeGender ||!employeeDOJ || !employeeRemarks || !employeeAcuredLeaves){
+  /* if(!employeeID || !employeeName || !employeeAge || !employeeGender ||!employeeDOJ || !employeeRemarks || !employeeAcuredLeaves){
     res.status(400);
     throw new Error("All fields are mandatory !");
-  }
+  } */
 
-  const Employee = await Employee.create({
+  const employee = await Employee.create({
     employeeID, 
     employeeName, 
     employeeAge, 
@@ -30,7 +30,7 @@ const createEmployee = asyncHandler (async (req, res) => {
     employeeAcuredLeaves
   });
 
-  res.status(201).json(Employee);
+  res.status(201).json(employee);
 });
 
 
@@ -38,12 +38,12 @@ const createEmployee = asyncHandler (async (req, res) => {
 //route Get /api/employees/:id
 //access public
 const getEmployee = asyncHandler (async (req, res) => {
-  const Employee = await Employee.findById(req.params.id);
+  const employee = await Employee.findById(req.params.id);
   if(!Employee){
     res.status(404);
     throw new Error("Employee not found");
   }
-  res.status(200).json(Employee);
+  res.status(200).json(employee);
 });
 
 
@@ -51,8 +51,8 @@ const getEmployee = asyncHandler (async (req, res) => {
 //route Post /api/employees
 //access public
 const updateEmployee = asyncHandler (async (req, res) => {
-  const Employee = await Employee.findById(req.params.id);
-  if(!Employee){
+  const employee = await Employee.findById(req.params.id);
+  if(!employee){
     res.status(404);
     throw new Error("Employee not found");
   }
@@ -72,13 +72,13 @@ const updateEmployee = asyncHandler (async (req, res) => {
 //route Delete /api/employees/:id
 //access public
 const deleteEmployee = asyncHandler (async (req, res) => {
-  const Employee = await Employee.findById(req.params.id);
-  if(!Employee){
+  const employee = await Employee.findById(req.params.id);
+  if(!employee){
     res.status(404);
     throw new Error("Employee not found");
   }
   await Employee.remove();
-  res.status(200).json(Employee);
+  res.status(200).json(employee);
 });
 
 
