@@ -21,7 +21,7 @@ const employeeSchema = mongoose.Schema({
     type: String,
     require: [true,"Please add the employee DOJ"],
   },
-  employeeRemark: {
+  employeeRemarks: {
     type: String,
     require: [true,"Please add the employee Remark"],
   },
