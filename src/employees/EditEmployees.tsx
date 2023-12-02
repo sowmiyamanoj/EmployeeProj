@@ -1,59 +1,49 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-interface Employee {
-  employeeName: string;
-  employeeID: string;
-  employeeAge: string;
-  employeeDOJ: string;
-  employeeRemarks: string;
-  employeeAcuredLeaves: string;
-  employeeGender: string;
-}
+const EditEmployee: React.FC = () => {
+    const { id } = useParams();
+    const [employee, setEmployee] = useState<any>({});
+    const navigate = useNavigate();
+    
+    
+    useEffect(() => {
+        axios.get(`http://localhost:5006/api/employees/${id}`)
+          .then((response) => {
+            console.log("Fetched employee data for editing:", response.data);
+            setEmployee(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching employee data:", error);
+          });
+      }, [id]);
 
-const EmployeeForm: React.FC = () => {
-  const [employee, setEmployee] = useState<Employee>({
-    employeeName: "",
-    employeeID: "",
-    employeeAge: "",
-    employeeDOJ: "",
-    employeeRemarks: "",
-    employeeAcuredLeaves: "",
-    employeeGender: "",
-  });
+      const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setEmployee({ ...employee, [name]: value });
+      };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEmployee({ ...employee, [name]: value });
-  };
+      const [errorMsg, setErrorMsg] = useState({});
+      const updateEmployee = (e: React.FormEvent) => {
+        e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log(employee);
-    axios
-      .post("http://localhost:5006/api/employees", employee)
-      .catch((err) => console.log(err))
-      .then((res) => console.log(res));
-  };
+        axios.put(`http://localhost:5006/api/employees/${id}`, employee)
+          .then((response) => {
+            console.log("Updated employee:", response.data);
+            navigate('/')
+          })
+          .catch((error) => {
+            console.error("Error updating employee:", error);
+          });
+      };
+
+    
 
   return (
     <div className="container border p-4 rounded">
-      <h3 className="mb-4">Employee Registration</h3>
-      <form className="row g-3" onSubmit={handleSubmit}>
-        <div className="col-md-6">
-          <label htmlFor="empName" className="form-label">
-            Employee Name
-          </label>
-          <input
-            type="empName"
-            className="form-control"
-            id="empName"
-            name="employeeName"
-            required
-            value={employee.employeeName}
-            onChange={handleChange}
-          />
-        </div>
+      <h3 className="mb-4">Edit Employee</h3>
+      <form className="row g-3" onSubmit={updateEmployee}>
         <div className="col-md-6">
           <label htmlFor="Id" className="form-label">
             Employee ID
@@ -64,9 +54,25 @@ const EmployeeForm: React.FC = () => {
             id="Id"
             required
             name="employeeID"
+            readOnly
             value={employee.employeeID}
             onChange={handleChange}
           />
+        </div>
+        <div className="col-md-6">
+          <label htmlFor="empName" className="form-label">
+            Employee Name
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="empName"
+            name="employeeName"
+            required
+            value={employee.employeeName}
+            onChange={handleChange}
+          />
+          {errorMsg && <span>{errorMsg.employeeName}</span>}
         </div>
         <div className="col-md-6">
           <label htmlFor="age" className="form-label">
@@ -88,7 +94,7 @@ const EmployeeForm: React.FC = () => {
           <input
             type="date"
             className="form-control"
-            id="Dtaeofjoining"
+            id="Dateofjoining"
             name="employeeDOJ"
             value={employee.employeeDOJ}
             onChange={handleChange}
@@ -96,7 +102,7 @@ const EmployeeForm: React.FC = () => {
         </div>
         <div className="col-md-6">
           <label htmlFor="remark" className="form-label">
-            Empoyee Remark
+            Employee Remark
           </label>
           <input
             type="text"
@@ -126,26 +132,24 @@ const EmployeeForm: React.FC = () => {
         </div>
 
         <div className="col-md-2">
-          <label htmlFor="AccuredLeaves" className="form-label">
-            AccuredLeaves
+          <label htmlFor="AccruedLeaves" className="form-label">
+            Accrued Leaves
           </label>
           <input
             type="text"
             className="form-control"
-            id="AccuredLeaves"
+            id="AccruedLeaves"
             name="employeeAcuredLeaves"
             value={employee.employeeAcuredLeaves}
             onChange={handleChange}
           />
         </div>
-        <div className="col-12">
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
+        <div className="col-12 text-center">
+        <button type="submit" className="btn btn-info">Update</button>
         </div>
       </form>
     </div>
   );
 };
 
-export default EmployeeForm;
+export default EditEmployee;
