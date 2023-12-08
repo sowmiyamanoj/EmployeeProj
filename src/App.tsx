@@ -1,8 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AddEmployee from './employees/AddEmployees'; 
+
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import DisplayEmployee from './employees/DispayEmployees'
-import EditEmployee from './employees/EditEmployees';
+
+
+import AddHoliday from './holidays/AddHoliday';
+
+
+import EditHoliday from './holidays/EditHoliday';
+import DisplayHoliday from './holidays/DisplayHoliday';
+import ReadHoliday from './holidays/ReadHolidays';
+
 
 function App() {
   
@@ -15,11 +22,18 @@ function App() {
       <>
       <Router>
         <Routes>
-          <Route path='/' element={<DisplayEmployee />} />
+          {/*<Route path='/' element={<DisplayEmployee />} />
           <Route path='/AddEmployees' element={<AddEmployee />} />
-          <Route path='/EditEmployee/:id' element={<EditEmployee />} />
+  <Route path='/EditEmployee/:id' element={<EditEmployee />} />*/}
+          <Route path='/' element={<DisplayHoliday/>} />
+          <Route path='/AddHolidays' element={<AddHoliday />} />
+          <Route path='/EditHoliday/:id' element={<EditHoliday />} />
+          <Route path="/ReadHoliday/:id" element={<ReadHoliday/>} />
+       
+          
         </Routes>
       </Router>
+  
     </>
       </div>
     </div>

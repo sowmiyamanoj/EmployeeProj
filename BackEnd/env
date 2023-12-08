@@ -1,2 +1,0 @@
-PORT=5001
-CONNECTION_STRING=mongodb+srv://admin:admin123@anilcluster.sei7wz9.mongodb.net/thayemployees-backend
