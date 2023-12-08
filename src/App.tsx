@@ -5,10 +5,12 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import AddHoliday from './holidays/AddHoliday';
 
-
+import AddEmployee from './employees/AddEmployees';
 import EditHoliday from './holidays/EditHoliday';
 import DisplayHoliday from './holidays/DisplayHoliday';
-import ReadHoliday from './holidays/ReadHolidays';
+import DisplayEmployee from './employees/DispayEmployees';
+import EditEmployee from './employees/EditEmployees';
+
 
 
 function App() {
@@ -22,15 +24,12 @@ function App() {
       <>
       <Router>
         <Routes>
-          {/*<Route path='/' element={<DisplayEmployee />} />
+          <Route path='/' element={<DisplayEmployee />} />
           <Route path='/AddEmployees' element={<AddEmployee />} />
-  <Route path='/EditEmployee/:id' element={<EditEmployee />} />*/}
-          <Route path='/' element={<DisplayHoliday/>} />
+         <Route path='/EditEmployee/:id' element={<EditEmployee />} />
+          <Route path='/DisplayHoliday' element={<DisplayHoliday/>} />
           <Route path='/AddHolidays' element={<AddHoliday />} />
           <Route path='/EditHoliday/:id' element={<EditHoliday />} />
-          <Route path="/ReadHoliday/:id" element={<ReadHoliday/>} />
-       
-          
         </Routes>
       </Router>
   
