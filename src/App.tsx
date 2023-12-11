@@ -1,42 +1,53 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
-
-import AddHoliday from './holidays/AddHoliday';
-
-import AddEmployee from './employees/AddEmployees';
-import EditHoliday from './holidays/EditHoliday';
-import DisplayHoliday from './holidays/DisplayHoliday';
-import DisplayEmployee from './employees/DispayEmployees';
-import EditEmployee from './employees/EditEmployees';
-
-
+import DisplayEmployee from './components/employees/DisplayEmployees'
+import Navbar from './components/Navbar';
+import Home from './components/Home';
+import AddEmployees from './components/employees/AddEmployees';
+import EditEmployee from './components/employees/EditEmployees';
+import ReadEmployees from './components/employees/ReadEmployees';
+import ReadRole from './components/role/ReadRole';
+import EditRole from './components/role/EditRole';
+import AddRole from './components/role/AddRole';
+import DisplayHoliday from './components/holidays/DisplayHoliday';
+import EditHoliday from './components/holidays/EditHoliday';
+import AddHoliday from './components/holidays/AddHoliday';
 
 function App() {
   
   return (
     <div>
-      <div className='d-flex justify-content-center p-3' style={{background:"lightblue"}} >
-      <h1>Thay Technology</h1>
-      </div>
-      <div className='p-5'>
       <>
       <Router>
+        <div className='App'>
+          <Navbar />
+          <Routes>
+            <Route path='/' element={<Home />} />
+
+            <Route path='/DisplayEmployees' element={<DisplayEmployee />} />
+            <Route path='/ReadRole' element={<ReadRole />} /> 
+            <Route path='/DisplayHolidays' element={<DisplayHoliday />} />    
+             </Routes>
+        </div>
         <Routes>
-          <Route path='/' element={<DisplayEmployee />} />
-          <Route path='/AddEmployees' element={<AddEmployee />} />
-         <Route path='/EditEmployee/:id' element={<EditEmployee />} />
-          <Route path='/DisplayHoliday' element={<DisplayHoliday/>} />
-          <Route path='/AddHolidays' element={<AddHoliday />} />
-          <Route path='/EditHoliday/:id' element={<EditHoliday />} />
+        <Route path='/AddEmployee' element={<AddEmployees />} /> 
+        <Route path='/AddRole' element={<AddRole />} />
+        <Route path='/EditEmployee/:id' element={<EditEmployee/>} />
+        <Route path='/ReadEmployee/:id' element={<ReadEmployees />} />
+        <Route path='/EditRole/:id' element={<EditRole />} />
+        <Route path='/AddHoliday' element={<AddHoliday />} />
+        <Route path='/EditHoliday/:id' element={<EditHoliday />} />
+        
         </Routes>
       </Router>
-  
-    </>
-      </div>
+      </>
     </div>
   );
 }
 
 export default App;
+
+// 
+// 
+//         
+//

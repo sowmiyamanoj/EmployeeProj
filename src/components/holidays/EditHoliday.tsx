@@ -23,6 +23,9 @@ const EditHoliday: React.FC = () => {
         const { name, value } = e.target;
         setHoliday({ ...holiday, [name]: value });
       };
+      const Backholiday = () => {
+        navigate("/DisplayHolidays");
+      }
 
       const [errorMsg, setErrorMsg] = useState({});
       const updateHoliday = (e: React.FormEvent) => {
@@ -31,7 +34,7 @@ const EditHoliday: React.FC = () => {
         axios.put(`http://localhost:5006/api/holidays/${id}`, holiday)
           .then((response) => {
             console.log("Updated holiday:", response.data);
-            navigate('/')
+            navigate('/DisplayHolidays')
           })
           .catch((error) => {
             console.error("Error updating holiday:", error);
@@ -41,7 +44,7 @@ const EditHoliday: React.FC = () => {
     
 
   return (
-    <div className="container border p-4 rounded">
+    <div className="container border p-4 rounded mt-4">
       <h3 className="mb-4">Edit Holiday</h3>
       <form className="row g-3" onSubmit={updateHoliday}>
         <div className="col-md-6">
@@ -88,7 +91,8 @@ const EditHoliday: React.FC = () => {
         </div>
       
         <div className="col-12 text-center">
-        <button type="submit" className="btn btn-info">Update</button>
+        <button type="submit" className="btn btn-info me-3">Update</button>
+        <button type="button" className="btn btn-danger" onClick={Backholiday}>Back</button>
         </div>
       </form>
     </div>
