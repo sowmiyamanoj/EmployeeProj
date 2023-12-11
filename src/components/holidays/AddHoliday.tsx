@@ -53,7 +53,7 @@ export default function HolidayForm(data: HolidayAddProps) {
       .post("http://localhost:5006/api/holidays/", holiday)
       .then((res) => {
         console.log(res);
-        navigate("/");
+        navigate("/DisplayHolidays");
       })
       .catch((err) => console.log(err));
   };
@@ -74,6 +74,7 @@ export default function HolidayForm(data: HolidayAddProps) {
             className="form-control"
             id="Id"
             required
+            pattern="[0-9]*"
             name="holidayID"
             value={holiday.holidayID}
             onChange={handleChange}
@@ -91,7 +92,6 @@ export default function HolidayForm(data: HolidayAddProps) {
             value={holiday.holidayName}
             onChange={handleChange}
           />
-          {errorMsg && <span>{errorMsg.holidayName}</span>}
         </div>
 
         <div className="col-6">

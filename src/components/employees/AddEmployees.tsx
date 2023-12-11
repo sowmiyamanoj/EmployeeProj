@@ -26,7 +26,6 @@ export default function EmployeeForm(data: EmployeeAddProps) {
     employeeAcuredLeaves: "",
     employeeGender: "",
   });
-  const [errorMsg, setErrorMsg] = useState({});
 
   const { opr } = useParams();
   const navigate = useNavigate();
@@ -39,28 +38,11 @@ export default function EmployeeForm(data: EmployeeAddProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validationErrors: Record<string, string> = {};
-    if (!employee.employeeName.trim()) {
-      validationErrors.employeeName = "Name Cannot be Empty";
-    }
-
-    setErrorMsg(validationErrors);
-
-    if (Object.keys(validationErrors).length === 0) {
-      alert("Validation successful");
-    } else {
-      return;
-    }
-
-    console.log({
-      employeeName: employee.employeeName,
-    });
-
     axios
       .post("http://localhost:5006/api/employees/", employee)
       .then((res) => {
         console.log(res);
-        navigate("/");
+        navigate("/DisplayEmployees");
       })
       .catch((err) => console.log(err));
   };
@@ -69,7 +51,7 @@ export default function EmployeeForm(data: EmployeeAddProps) {
   }, [opr]);
 
   return (
-    <div className="container border rounded p-4">
+    <div className="container border rounded p-4 mt-4">
       <h3 className="mb-4">Employee Registration</h3>
       <form className="row col-xxl" onSubmit={handleSubmit}>
         <div className="col-md-6">
@@ -98,7 +80,6 @@ export default function EmployeeForm(data: EmployeeAddProps) {
             value={employee.employeeName}
             onChange={handleChange}
           />
-          {errorMsg && <span>{errorMsg.employeeName}</span>}
         </div>
         <div className="col-md-6">
           <label htmlFor="age" className="form-label">

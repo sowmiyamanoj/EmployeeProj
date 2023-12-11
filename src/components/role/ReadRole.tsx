@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./DisplayHoliday.css";
+import '../DeleteCall.css';
 
-interface HolidayProps {
-  holidayData;
-  onSelectItem: (item: HolidayProps) => void;
+interface RoleProps {
+  RoleData;
+  onSelectItem: (item: RoleProps) => void;
 }
 
-const DisplayHoliday: React.FC<HolidayProps> = () => {
+const ReadRole: React.FC<RoleProps> = () => {
   const [data, setData] = useState<any[]>([]);
-  const [deleteId, setDeleteId] = useState(null);
   const navigate = useNavigate();
+  const [deleteId, setDeleteId] = useState(null);
 
   function getData() {
-    fetch("http://localhost:5006/api/holidays")
+    fetch("http://localhost:5006/api/role")
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -22,36 +22,16 @@ const DisplayHoliday: React.FC<HolidayProps> = () => {
         console.error("Error fetching data:", error);
       });
   }
-  const updateHoliday= (id) => {
-    navigate("/EditHoliday/" + id);
-  }
 
-  const AddHolidays = () => {
-    navigate("/AddHolidays/");
+  const updateRole = (id) => {
+    navigate("/EditRole/" + id);
   }
-  const deleteHoliday = (id) => {
-    if (window.confirm('Do you want to remove?')) {
-      fetch("http://localhost:5006/api/holidays/" + id, {
-        method: "DELETE"
-      }).then((res) => {
-        alert('Removed successfully.')
-        window.location.reload();
-      }).catch((err) => {
-        console.log(err.message)
-      })
-    }
-  }
-
-  const confirmDelete = (id) => {
-    setDeleteId(id);
-  }
-
-  const cancelDelete = () => {
-    setDeleteId(null);
+  const AddRole = () => {
+    navigate("/AddRole/");
   }
 
   const executeDelete = (id) => {
-    fetch("http://localhost:5006/api/holidays/" + id, {
+    fetch("http://localhost:5006/api/role/" + id, {
       method: "DELETE"
     })
       .then((res) => {
@@ -62,50 +42,60 @@ const DisplayHoliday: React.FC<HolidayProps> = () => {
         console.log(err.message)
       });
   }
- 
+  const confirmDelete = (id) => {
+    setDeleteId(id);
+  }
+
+  const cancelDelete = () => {
+    setDeleteId(null);
+  }
+
   useEffect(() => {
     getData();
-  }, [data]);
+  }, []);
 
   return (
     <>
-       <div className="d-flex align-items-end flex-column">
-        <button className="btn btn-info" onClick={AddHolidays}> + Add Holidays</button>
+      <div className="d-flex align-items-end flex-column">
+        <button className="btn btn-info mt-3 me-4" onClick={AddRole}> + Add Role</button>
       </div>
       <div style={{ padding: "50px" }}>
         <table className="table table-hover table-bordered table-striped text-center">
-          <caption className="">List of Holidays </caption>
+          <caption className="">Employee Role List </caption>
           <thead>
             <tr>
-              <th>Holiday ID</th>
-              <th>Holiday Name</th>
-              <th>Holiday Date</th>
-              <th>Actions</th>
+              <th>Role ID</th>
+              <th>Role Name</th>
+              <th>Role Status</th>
+              <th>Rule Rights</th>
+              <th>Role Description</th>
+              <th>Action</th>
+              
             </tr>
           </thead>
           <tbody className="table-group-divider">
             {data.map((d, i) => (
               <tr key={i}>
-                <td>{d.holidayID}</td>
-                <td>{d.holidayName}</td>
-                <td>{d.holidayDateTime}</td>
+                <td>{d.roleID}</td>
+                <td>{d.roleName }</td>
+                <td>{d.roleStatus }</td>
+                <td>{d.ruleRights }</td>
+                <td>{d.roleDescription }</td>
+                
                 <td className="d-flex justify-content-evenly">
-               
                   <input
                     type="button"
                     className="btn btn-success"
-                    onClick={() => updateHoliday(d.holidayID)}
+                    onClick={() => updateRole(d.roleID)}
                     value="Edit"
                   />
                   <br />
                   <input
                     type="button"
-                    className="btn btn-danger"
-                    onClick={() => confirmDelete(d.holidayID)}
+                    className="btn btn-danger me-2"
+                    onClick={() => confirmDelete(d.roleID)}
                     value="Delete"
                   />
-                  <br />
-                 
                 </td>
               </tr>
             ))}
@@ -116,10 +106,10 @@ const DisplayHoliday: React.FC<HolidayProps> = () => {
         <div className="modal-background">
           <div className="modal-card">
             <div className="card-body">
-              <p>Are you sure you want to delete this holiday?</p>
+              <p>Are you sure you want to delete this Employee Role?</p>
               <div className="d-flex justify-content-evenly">
-                <button className="btn btn-secondary" onClick={cancelDelete}>No</button>
                 <button className="btn btn-danger" onClick={() => executeDelete(deleteId)}>Yes</button>
+                <button className="btn btn-secondary" onClick={cancelDelete}>No</button>
               </div>
             </div>
           </div>
@@ -129,4 +119,4 @@ const DisplayHoliday: React.FC<HolidayProps> = () => {
   );
 };
 
-export default DisplayHoliday;
+export default ReadRole;

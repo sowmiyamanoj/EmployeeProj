@@ -19,19 +19,22 @@ const EditEmployee: React.FC = () => {
           });
       }, [id]);
 
+      const backEmployee = () => {
+        history.back();
+      }
+
+
       const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setEmployee({ ...employee, [name]: value });
       };
-
-      const [errorMsg, setErrorMsg] = useState({});
       const updateEmployee = (e: React.FormEvent) => {
         e.preventDefault();
 
         axios.put(`http://localhost:5006/api/employees/${id}`, employee)
           .then((response) => {
             console.log("Updated employee:", response.data);
-            navigate('/')
+            navigate('/DisplayEmployees')
           })
           .catch((error) => {
             console.error("Error updating employee:", error);
@@ -41,7 +44,7 @@ const EditEmployee: React.FC = () => {
     
 
   return (
-    <div className="container border p-4 rounded">
+    <div className="container border p-4 rounded mt-4">
       <h3 className="mb-4">Edit Employee</h3>
       <form className="row g-3" onSubmit={updateEmployee}>
         <div className="col-md-6">
@@ -72,7 +75,6 @@ const EditEmployee: React.FC = () => {
             value={employee.employeeName}
             onChange={handleChange}
           />
-          {errorMsg && <span>{errorMsg.employeeName}</span>}
         </div>
         <div className="col-md-6">
           <label htmlFor="age" className="form-label">
@@ -145,7 +147,8 @@ const EditEmployee: React.FC = () => {
           />
         </div>
         <div className="col-12 text-center">
-        <button type="submit" className="btn btn-info">Update</button>
+        <button type="submit" className="btn btn-info me-3">Update</button>
+        <button type="reset" className="btn btn-danger " onClick={backEmployee}>Back</button>
         </div>
       </form>
     </div>
