@@ -1,5 +1,7 @@
+
 const asyncHandler = require("express-async-handler");
 const Holiday = require("../models/holidayModel");
+const Counter = require("../models/Counter");
 
 //Get all holidays
 //route Get /api/holidays
@@ -15,17 +17,25 @@ const getHolidays = asyncHandler(async (req, res) => {
 
 const createHoliday = asyncHandler(async (req, res) => {
   console.log("The request body is:", req.body);
-  const { holidayID, holidayName, holidayDateTime } = req.body;
+  const { holidayName,holidayDateTime } = req.body;
+
+  // Find and update the counter
+  const counter = await Counter.findOneAndUpdate(
+    { name: 'holidayID' },
+    { $inc: { value: 1 } },
+    { new: true, upsert: true }
+  );
 
   const holiday = await Holiday.create({
-    holidayID,
+    holidayID: counter.value,
     holidayName,
     holidayDateTime,
   });
 
   res.status(201).json(holiday);
 });
-//Get all holidays
+
+//Get holidays by id
 //route Get /api/holidays/:id
 //access public
 const getHoliday = asyncHandler(async (req, res) => {
@@ -37,8 +47,8 @@ const getHoliday = asyncHandler(async (req, res) => {
   res.status(200).json(holiday);
 });
 
-//update all holidays
-//route Post /api/holidays
+//update holidays by id
+//route Put /api/holidays/:id
 //access public
 
 const updateHoliday = asyncHandler(async (req, res) => {
@@ -56,7 +66,7 @@ const updateHoliday = asyncHandler(async (req, res) => {
   res.status(200).json(updatedHoliday);
 });
 
-//Delete all holidays
+//Delete holidays by id
 //route Delete /api/holidays/:id
 //access public
 
