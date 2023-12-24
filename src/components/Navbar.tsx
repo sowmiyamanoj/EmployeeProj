@@ -59,6 +59,13 @@ const Navbar = () => {
         >
           Holiday list
         </NavLink>
+        <NavLink
+          className="p-3"
+          style={{ ...navLinkStyles, ...navLink }}
+          to="/AboutUs"
+        >
+          About
+        </NavLink>
       </div>
     </nav>
   );

@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import DisplayEmployee from './components/employees/DisplayEmployees'
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -12,6 +12,9 @@ import AddRole from './components/role/AddRole';
 import DisplayHoliday from './components/holidays/DisplayHoliday';
 import EditHoliday from './components/holidays/EditHoliday';
 import AddHoliday from './components/holidays/AddHoliday';
+import AboutUs from './components/AboutUs';
+import LearnMore from './components/LearnMore';
+
 
 function App() {
   
@@ -23,7 +26,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route path='/' element={<Home />} />
-
+            <Route path='/AboutUs'  element={<AboutUs/>}/>
             <Route path='/DisplayEmployees' element={<DisplayEmployee />} />
             <Route path='/ReadRole' element={<ReadRole />} /> 
             <Route path='/DisplayHolidays' element={<DisplayHoliday />} />    
@@ -37,7 +40,9 @@ function App() {
         <Route path='/EditRole/:id' element={<EditRole />} />
         <Route path='/AddHoliday' element={<AddHoliday />} />
         <Route path='/EditHoliday/:id' element={<EditHoliday />} />
-        
+
+        <Route path='/learnMore' element={<LearnMore/>} />
+       
         </Routes>
       </Router>
       </>

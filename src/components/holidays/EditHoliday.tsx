@@ -6,6 +6,7 @@ const EditHoliday: React.FC = () => {
     const { id } = useParams();
     const [holiday, setHoliday] = useState<any>({});
     const navigate = useNavigate();
+    const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
     
     
     useEffect(() => {
@@ -23,14 +24,46 @@ const EditHoliday: React.FC = () => {
         const { name, value } = e.target;
         setHoliday({ ...holiday, [name]: value });
       };
+
+      const hasValidationErrors = () => {
+        const errors = {};
+      
+        if (!holiday.holidayName.trim()) {
+          errors.holidayName = "Name cannot be empty";
+        } else if (holiday.holidayName.trim().length <= 4) {
+          errors.holidayName = "Name must have more than 4 letters";
+        } else if (!/^[a-zA-Z. ]+$/.test(holiday.holidayName)) {
+          errors.holidayName= "Name must be uppercase letter, lowercase letters only";
+        }
+       
+    
+        if (!holiday.holidayDateTime.trim()) {
+          errors.holidayDateTime = "Date cannot be empty";
+        } else {
+          const DateTimeHoliday = new Date(holiday.holidayDateTime);
+          const currentDate = new Date();
+          const twoMonthsAgo = new Date();
+          twoMonthsAgo.setMonth(currentDate.getMonth() - 2);
+    
+          if (DateTimeHoliday > currentDate || DateTimeHoliday < twoMonthsAgo) {
+            errors. holidayDateTime= "Date must be within the last two months";
+          }
+        }
+        setErrorMsg(errors);
+        return Object.keys(errors).length > 0;
+      };
+    
+    
       const Backholiday = () => {
         navigate("/DisplayHolidays");
       }
 
-      const [errorMsg, setErrorMsg] = useState({});
+     
       const updateHoliday = (e: React.FormEvent) => {
         e.preventDefault();
-
+        if (hasValidationErrors()) {
+          console.log("Validation errors. Form not submitted.");
+        } else {
         axios.put(`http://localhost:5006/api/holidays/${id}`, holiday)
           .then((response) => {
             console.log("Updated holiday:", response.data);
@@ -41,27 +74,13 @@ const EditHoliday: React.FC = () => {
           });
       };
 
-    
+      };
 
   return (
     <div className="container border p-4 rounded mt-4">
       <h3 className="mb-4">Edit Holiday</h3>
       <form className="row g-3" onSubmit={updateHoliday}>
-        <div className="col-md-6">
-        <label htmlFor="Id" className="form-label">
-            Holiday ID
-          </label>
-          <input
-            type="Id"
-            className="form-control"
-            id="Id"
-            required
-            name="holidayID"
-            value={holiday.holidayID}
-            onChange={handleChange}
-        
-          />
-        </div>
+      
         <div className="col-md-6">
         <label htmlFor="holidayName" className="form-label">
             Holiday Name
@@ -74,7 +93,7 @@ const EditHoliday: React.FC = () => {
             value={holiday.holidayName}
             onChange={handleChange}
           />
-          {errorMsg && <span>{errorMsg.holidayName}</span>}
+        {errorMsg.holidayName && <span style={{ color: "red" }}>{errorMsg.holidayName}</span>}
         </div>
         <div className="col-md-6">
         <label htmlFor="hoidayDateTime" className="form-label">
@@ -88,6 +107,7 @@ const EditHoliday: React.FC = () => {
             value={holiday.holidayDateTime}
             onChange={handleChange}
           />
+           {errorMsg && <span style={{ color: "red" }}>{errorMsg.holidayDateTime}</span>}
         </div>
       
         <div className="col-12 text-center">
