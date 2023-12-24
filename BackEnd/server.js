@@ -27,6 +27,8 @@ app.use(express.json());
 app.use("/api/holidays", require("./routes/holidayRoutes"));
 app.use(holidayErrorHandler);
 
+app.use("/api/time", require("./routes/timeRouters"));
+
 app.listen(port, () => {
   console.log(`Server running on port ${port} `);
 });
