@@ -81,7 +81,7 @@ const DisplayEmployee: React.FC<EmployeeProps> = () => {
                     type="button"
                     className="btn btn-success me-4"
                     onClick={() => readEmployee(d.employeeID)}
-                    value="View details"
+                    value="Edit"
                   />
                   <input
                     type="button"
