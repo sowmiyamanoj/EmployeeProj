@@ -13,7 +13,7 @@ const DisplayHoliday: React.FC<HolidayProps> = () => {
   const navigate = useNavigate();
 
   function getData() {
-    fetch("http://localhost:5006/api/holidays")
+    fetch("http://localhost:5000/api/holiday")
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -29,19 +29,7 @@ const DisplayHoliday: React.FC<HolidayProps> = () => {
   const AddHolidays = () => {
     navigate("/AddHoliday/");
   }
-  const deleteHoliday = (id) => {
-    if (window.confirm('Do you want to remove?')) {
-      fetch("http://localhost:5006/api/holidays/" + id, {
-        method: "DELETE"
-      }).then((res) => {
-        alert('Removed successfully.')
-        window.location.reload();
-      }).catch((err) => {
-        console.log(err.message)
-      })
-    }
-  }
-
+  
   const confirmDelete = (id) => {
     setDeleteId(id);
   }
@@ -51,7 +39,7 @@ const DisplayHoliday: React.FC<HolidayProps> = () => {
   }
 
   const executeDelete = (id) => {
-    fetch("http://localhost:5006/api/holidays/" + id, {
+    fetch("http://localhost:5000/api/holiday/" + id, {
       method: "DELETE"
     })
       .then((res) => {
@@ -66,7 +54,6 @@ const DisplayHoliday: React.FC<HolidayProps> = () => {
   useEffect(() => {
     getData();
   }, [data]);
-
   return (
     <>
        <div className="d-flex align-items-end flex-column">

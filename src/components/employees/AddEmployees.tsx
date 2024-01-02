@@ -14,6 +14,7 @@ interface EmployeeProps {
   employeeRemarks: string;
   employeeAcuredLeaves: string;
   employeeGender: string;
+  roleID:string;
 }
 
 export default function EmployeeForm(data: EmployeeAddProps) {
@@ -25,6 +26,7 @@ export default function EmployeeForm(data: EmployeeAddProps) {
     employeeRemarks: "",
     employeeAcuredLeaves: "",
     employeeGender: "",
+    roleID:"",
   });
   const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ export default function EmployeeForm(data: EmployeeAddProps) {
 
     if (!employee.employeeName.trim()) {
       errors.employeeName = "Name cannot be empty";
-    } else if (employee.employeeName.trim().length <= 4) {
+    } else if (employee.employeeName.trim().length < 4) {
       errors.employeeName = "Name must have more than 4 letters";
     } else if (!/^[a-zA-Z. ]+$/.test(employee.employeeName)) {
       errors.employeeName = "Name must be uppercase letter, lowercase letters only";
@@ -99,7 +101,7 @@ export default function EmployeeForm(data: EmployeeAddProps) {
       console.log("Validation errors. Form not submitted.");
     } else {
       axios
-        .post("http://localhost:5006/api/employees/", employee)
+        .post("http://localhost:5000/api/employee/", employee)
         .then((res) => {
           console.log(res);
           navigate("/DisplayEmployees");
@@ -220,7 +222,19 @@ export default function EmployeeForm(data: EmployeeAddProps) {
           />
           {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.employeeAcuredLeaves}</span>)}
         </div>
-
+        <div className="col-md-2">
+          <label htmlFor="roleID" className="form-label">
+            roleID
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="roleID"
+            name="roleID"
+            value={employee.roleID}
+            onChange={handleChange}
+          />
+          </div>
         <div className="p-5 text-center">
           <button type="submit" className="btn btn-success" disabled={isSubmitDisabled}>
             Submit

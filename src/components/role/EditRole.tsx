@@ -9,10 +9,11 @@ const EditRole: React.FC = () => {
     const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        axios.get(`http://localhost:5006/api/role/${id}`)
+        axios.get(`http://localhost:5000/api/roles/${id}`)
             .then((response) => {
-                console.log("Fetched role data for editing:", response.data);
-                setRole(response.data);
+                console.log("Fetched data: ", response)
+                const roleData = response.data[0];
+                setRole(roleData)
             })
             .catch((error) => {
                 console.error("Error fetching role data:", error);
@@ -39,18 +40,18 @@ const EditRole: React.FC = () => {
         } else if (!/^\d+$/.test(role.roleID.trim())) {
           errors.roleID = "ID must be a number";
         }
-      
-        if (!role.roleStatus.trim()) {
+        if (!role.roleStatus) {
           errors.roleStatus = "status cannot be empty";
         }
-      
+        if (!role.createdDate.trim()) {
+            errors.createdDate = "Date cannot be empty";
+          } 
         if (!role.roleDescription) {
           errors.roleDescription = "Description cannot be empty";
         }
         if (!role.ruleRights) {
           errors.ruleRights = "RuleRights cannot be empty";
         }
-      
         setErrorMsg(errors);
       
         return Object.keys(errors).length > 0;
@@ -64,7 +65,7 @@ const EditRole: React.FC = () => {
         if (hasValidationErrors()) {
             console.log("Validation errors. Form not submitted.");
           } else {
-        axios.put(`http://localhost:5006/api/role/${id}`, role)
+        axios.put(`http://localhost:5000/api/roles/${id}`, role)
             .then((response) => {
                 console.log("Updated Role:", response.data);
                 navigate('/ReadRole')
@@ -136,6 +137,22 @@ const EditRole: React.FC = () => {
                     />
                     {errorMsg.roleStatus && <span style={{ color: "red" }}>{errorMsg.roleStatus}</span>}
                 </div>
+                <div className="col-md-6">
+                    <label htmlFor="createdDate" className="form-label">
+                        Created Date
+                    </label>
+                    <input
+                        type="date"
+                        className="form-control"
+                        id="createdDate"
+                        name="createdDate"
+                        value={role.createdDate}
+                        onChange={handleChange}
+                    />
+                    {errorMsg.currentDate && <span style={{ color: "red" }}>{errorMsg.createdDate}</span>}
+                </div>
+
+
                 <div className="col-md-6 me-3">
                     <label htmlFor="roleDescription" className="form-label">
                         Description

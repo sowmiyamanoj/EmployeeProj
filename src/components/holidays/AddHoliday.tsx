@@ -7,14 +7,12 @@ interface HolidayAddProps {
 }
 
 interface HolidayProps {
-  holidayID: string;
   holidayName: string;
   holidayDateTime: string;
 }
 
 export default function HolidayForm(data: HolidayAddProps) {
   const [holiday, setHoliday] = useState<HolidayProps>({
-    holidayID: "",
     holidayName: "",
     holidayDateTime: "",
 
@@ -31,7 +29,6 @@ export default function HolidayForm(data: HolidayAddProps) {
 
   const hasValidationErrors = () => {
     const errors = {};
-  
     if (!holiday.holidayName.trim()) {
       errors.holidayName = "Name cannot be empty";
     } else if (holiday.holidayName.trim().length <= 4) {
@@ -43,16 +40,8 @@ export default function HolidayForm(data: HolidayAddProps) {
 
     if (!holiday.holidayDateTime.trim()) {
       errors.holidayDateTime = "Date cannot be empty";
-    } else {
-      const datetimeDate = new Date(holiday.holidayDateTime);
-      const currentDate = new Date();
-      const twoMonthsAgo = new Date();
-      twoMonthsAgo.setMonth(currentDate.getMonth() - 2);
-
-      if (datetimeDate > currentDate || datetimeDate < twoMonthsAgo) {
-        errors.holidayDateTime= "Date must be within the last two months";
-      }
-    }
+    } 
+    
     setErrorMsg(errors);
     return Object.keys(errors).length > 0;
   };
@@ -64,7 +53,7 @@ export default function HolidayForm(data: HolidayAddProps) {
       console.log("Validation errors. Form not submitted.");
     } else {
     axios
-      .post("http://localhost:5006/api/holidays/", holiday)
+      .post("http://localhost:5000/api/holiday/", holiday)
       .then((res) => {
         console.log(res);
         navigate("/DisplayHolidays");

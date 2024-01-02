@@ -8,6 +8,7 @@ interface RoleProps{
     roleName : String;
     roleStatus: String;
     roleDescription: String ;
+    createdDate:String;
     ruleRights: String;
 }
 
@@ -18,6 +19,7 @@ const  [role , setRole] = useState<RoleProps> ({
     roleName : "",
     roleStatus: "",
     roleDescription:"",
+    createdDate:"",
     ruleRights: "",
 
 });
@@ -55,6 +57,9 @@ const hasValidationErrors = () => {
   if (!role.roleDescription) {
     errors.roleDescription = "Description cannot be empty";
   }
+  if (!role.createdDate.trim()) {
+    errors.createdDate = "Date cannot be empty";
+  } 
   if (!role.ruleRights) {
     errors.ruleRights = "RuleRights cannot be empty";
   }
@@ -68,7 +73,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       console.log("Validation errors. Form not submitted.");
     } else {
     axios
-      .post("http://localhost:5006/api/role/", role)
+      .post("http://localhost:5000/api/roles/", role)
       .then((res) => {
         console.log(res);
         })
@@ -142,6 +147,21 @@ const handleSubmit = async (e: React.FormEvent) => {
            {errorMsg.roleStatus && <span style={{ color: "red" }}>{errorMsg.roleStatus}</span>}
         </div>
         <div className="col-md-6 me-3">
+
+        <label htmlFor="CreateDate" className="form-label">
+            Create Date
+          </label>
+          <input
+            type="date"
+            className="form-control"
+            id="createdDate"
+            name="createdDate"
+            value={role.createdDate}
+            onChange={handleChange}
+          />
+           {errorMsg.createdDate && <span style={{ color: "red" }}>{errorMsg.createdDate}</span>}
+        </div>
+        <div className="col-md-6 me-3">
           <label htmlFor="roleDescription" className="form-label">
             Description
           </label>
@@ -155,6 +175,9 @@ const handleSubmit = async (e: React.FormEvent) => {
           />
            {errorMsg.roleDescription && <span style={{ color: "red" }}>{errorMsg.roleDescription}</span>}
         </div>
+       
+
+     
 
         <div className="p-5 text-center">
         <button type="submit" className="btn btn-success" disabled={isSubmitDisabled}>
