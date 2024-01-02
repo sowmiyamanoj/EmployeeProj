@@ -1,94 +1,46 @@
-const asyncHandler = require("express-async-handler");
-const Employee = require("../models/employeeModel");
+const express = require('express');
+const router = express.Router();
 
-// Get all employees
-// route Get /api/employees
-// access public
-const getEmployees = asyncHandler(async (req, res) => {
-  const employees = await Employee.find();
-  res.status(200).json(employees);
-});
+const service = require('../services/employeeService')
 
-// Create New employees
-// route Post /api/employees
-// access public
-const createEmployee = asyncHandler(async (req, res) => {
-  console.log("The request body is:", req.body);
-  const {
-    employeeID,
-    employeeName,
-    employeeAge,
-    employeeGender,
-    employeeDOJ,
-    employeeRemarks,
-    employeeAcuredLeaves
-  } = req.body;
 
-  const employee = await Employee.create({
-    employeeID,
-    employeeName,
-    employeeAge,
-    employeeGender,
-    employeeDOJ,
-    employeeRemarks,
-    employeeAcuredLeaves
-  });
+router.get('/', async (req, res) =>{
+  const employees = await service.getAllEmployees()
+  res.send(employees)
+})
 
-  res.status(201).json(employee);
-});
 
-// Get individual employees
-// route Get /api/employees/:id
-// access public
-const getEmployee = asyncHandler(async (req, res) => {
-  const employee = await Employee.findOne({ employeeID: req.params.id });
-  if (!employee) {
-    res.status(404);
-    throw new Error("Employee not found");
-  }
-  res.status(200).json(employee);
-});
+router.get('/:id', async (req, res) =>{
+  const employee = await service.getEmployeesID(req.params.id)
+  if(employee.length == 0)
+  res.status(404).json('no record with given id : ' + req.params.id)
+  else
+  res.send(employee)
+})
 
-// Update all employees
-// route Post /api/employees
-// access public
-const updateEmployee = asyncHandler(async (req, res) => {
-  const employee = await Employee.findOne({ employeeID: req.params.id });
-  if (!employee) {
-    res.status(404);
-    throw new Error("Employee not found");
-  }
 
-  const updatedEmployee = await Employee.findOneAndUpdate(
-    { employeeID: req.params.id },
-    req.body,
-    { new: true }
-  );
+router.delete('/:id', async (req, res) =>{
+  const affectedRows = await service.deleteEmployee(req.params.id)
+  if(affectedRows == 0)
+  res.status(404).json('no record with given id : ' + req.params.id)
+  else
+  res.send('delete successfully.')
+})
 
-  res.status(200).json(updatedEmployee);
-});
 
-// Delete all employees
-// route Delete /api/employees/:id
-// access public
-const deleteEmployee = async (req, res) => {
-  try {
-    const deleteEmployee = await Employee.findOneAndDelete({
-      employeeID: req.params.id
-    });
-    if (!deleteEmployee) {
-      return res.status(404).json({ message: 'Employee not found' });
-    }
-    res.status(200).json({ message: 'Employee deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+router.post('/', async (req, res) =>{
+ await service.createEmployee(req.body)
+  res.status(201).send('create successfully.')
+})
 
-module.exports = {
-  getEmployees,
-  createEmployee,
-  getEmployee,
-  updateEmployee,
-  deleteEmployee
-};
+
+router.put('/:id', async (req, res) =>{
+  const affectedRows = await service.updateEmployee(req.body,req.params.id)
+  if(affectedRows == 0)
+  res.status(404).json('no record with given id : ' + req.params.id)
+  else
+  res.send('updated successfully.')
+})
+
+
+module.exports = router;

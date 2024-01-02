@@ -1,92 +1,56 @@
 
-const asyncHandler = require("express-async-handler");
-const Holiday = require("../models/holidayModel");
-const Counter = require("../models/Counter");
+const express = require('express');
+const router = express.Router();
 
-//Get all holidays
-//route Get /api/holidays
-//access public
-const getHolidays = asyncHandler(async (req, res) => {
-  const holidays = await Holiday.find();
-  res.status(200).json(holidays);
-});
+const service = require('../services/holidayService')
 
-//create new holiday
-//route Post /api/holidays
-//access public
 
-const createHoliday = asyncHandler(async (req, res) => {
-  console.log("The request body is:", req.body);
-  const { holidayName,holidayDateTime } = req.body;
+router.get('/', async (req, res) =>{
+  const holidays = await service.getAllHolidays()
+  res.send(holidays)
+})
 
-  // Find and update the counter
-  const counter = await Counter.findOneAndUpdate(
-    { name: 'holidayID' },
-    { $inc: { value: 1 } },
-    { new: true, upsert: true }
-  );
-
-  const holiday = await Holiday.create({
-    holidayID: counter.value,
-    holidayName,
-    holidayDateTime,
-  });
-
-  res.status(201).json(holiday);
-});
-
-//Get holidays by id
-//route Get /api/holidays/:id
-//access public
-const getHoliday = asyncHandler(async (req, res) => {
-  const holiday = await Holiday.findOne({ holidayID: req.params.id });
-  if (!Holiday) {
-    res.status(404);
-    throw new Error("Holiday not found");
-  }
-  res.status(200).json(holiday);
-});
-
-//update holidays by id
-//route Put /api/holidays/:id
-//access public
-
-const updateHoliday = asyncHandler(async (req, res) => {
-  const holiday = await Holiday.findOne({ holidayID: req.params.id });
-  if (!holiday) {
-    res.status(404);
-    throw new Error("Holiday not found");
-  }
-  const updatedHoliday = await Holiday.findOneAndUpdate(
-    { holidayID: req.params.id },
-    req.body,
-    { new: true }
-  );
-
-  res.status(200).json(updatedHoliday);
-});
-
-//Delete holidays by id
-//route Delete /api/holidays/:id
-//access public
-
-const deleteHoliday = async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const deleteHoliday = await Holiday.findOneAndDelete({
-      holidayID: req.params.id,
-    });
-    if (!deleteHoliday) {
-      return res.status(404).json({ message: "Holiday not found" });
+    // Assuming `getEmployeeByID` is a function in your service to retrieve an employee by ID
+    const holiday = await service.getHolidayByID(req.params.id);
+
+    if (!holiday) {
+      res.status(404).json('No record with the given ID: ' + req.params.id);
+    } else {
+      res.send(holiday);
     }
-    res.status(200).json({ message: "Holiday deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // Handle errors appropriately
+    console.error(error);
+    res.status(500).json('Internal Server Error');
   }
-};
-module.exports = {
-  getHolidays,
-  createHoliday,
-  getHoliday,
-  updateHoliday,
-  deleteHoliday,
-};
+});
+
+
+
+router.delete('/:id', async (req, res) =>{
+  const affectedRows = await service.deleteHoliday(req.params.id)
+  if(affectedRows == 0)
+  res.status(404).json('no record with given id : ' + req.params.id)
+  else
+  res.send('delete successfully.')
+})
+
+
+router.post('/', async (req, res) =>{
+ await service.createHoliday(req.body)
+  res.status(201).send('create successfully.')
+})
+
+
+router.put('/:id', async (req, res) =>{
+  const affectedRows = await service.updateHoliday(req.body,req.params.id)
+  if(affectedRows == 0)
+  res.status(404).json('no record with given id : ' + req.params.id)
+  else
+  res.send('updated successfully.')
+})
+
+
+module.exports = router;

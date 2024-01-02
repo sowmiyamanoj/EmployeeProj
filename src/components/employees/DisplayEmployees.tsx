@@ -13,7 +13,7 @@ const DisplayEmployee: React.FC<EmployeeProps> = () => {
   const navigate = useNavigate();
 
   function getData() {
-    fetch("http://localhost:5006/api/employees")
+    fetch("http://localhost:5000/api/employee")
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -36,7 +36,7 @@ const DisplayEmployee: React.FC<EmployeeProps> = () => {
   }
 
   const executeDelete = (id) => {
-    fetch("http://localhost:5006/api/employees/" + id, {
+    fetch("http://localhost:5000/api/employee/" + id, {
       method: "DELETE"
     })
       .then((res) => {

@@ -13,7 +13,7 @@ const ReadRole: React.FC<RoleProps> = () => {
   const [deleteId, setDeleteId] = useState(null);
 
   function getData() {
-    fetch("http://localhost:5006/api/role")
+    fetch("http://localhost:5000/api/roles")
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -22,16 +22,21 @@ const ReadRole: React.FC<RoleProps> = () => {
         console.error("Error fetching data:", error);
       });
   }
-
   const updateRole = (id) => {
     navigate("/EditRole/" + id);
   }
-  const AddRole = () => {
-    navigate("/AddRole/");
+
+  const confirmDelete = (id) => {
+    setDeleteId(id);
   }
 
+  const cancelDelete = () => {
+    setDeleteId(null);
+  }
+  
+
   const executeDelete = (id) => {
-    fetch("http://localhost:5006/api/role/" + id, {
+    fetch("http://localhost:5000/api/roles/" + id, {
       method: "DELETE"
     })
       .then((res) => {
@@ -42,17 +47,13 @@ const ReadRole: React.FC<RoleProps> = () => {
         console.log(err.message)
       });
   }
-  const confirmDelete = (id) => {
-    setDeleteId(id);
-  }
-
-  const cancelDelete = () => {
-    setDeleteId(null);
+  const AddRole = () => {
+    navigate("/AddRole/");
   }
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [data]);
 
   return (
     <>
@@ -61,13 +62,14 @@ const ReadRole: React.FC<RoleProps> = () => {
       </div>
       <div style={{ padding: "50px" }}>
         <table className="table table-hover table-bordered table-striped text-center">
-          <caption className="">Employee Role List </caption>
+          <caption className="">Role List </caption>
           <thead>
             <tr>
               <th>Role ID</th>
               <th>Role Name</th>
               <th>Role Status</th>
               <th>Rule Rights</th>
+              <th>Created Date</th>
               <th>Role Description</th>
               <th>Action</th>
               
@@ -80,8 +82,8 @@ const ReadRole: React.FC<RoleProps> = () => {
                 <td>{d.roleName }</td>
                 <td>{d.roleStatus }</td>
                 <td>{d.ruleRights }</td>
+                <td>{d.createdDate }</td>
                 <td>{d.roleDescription }</td>
-                
                 <td className="d-flex justify-content-evenly">
                   <input
                     type="button"

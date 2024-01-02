@@ -22,7 +22,7 @@ const ReadEmployees: React.FC = () => {
   }
 
   const executeDelete = (id) => {
-    fetch("http://localhost:5006/api/employees/" + id, {
+    fetch("http://localhost:5000/api/employee/" + id, {
       method: "DELETE"
     })
       .then((res) => {
@@ -36,15 +36,25 @@ const ReadEmployees: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5006/api/employees/${id}`)
+      .get(`http://localhost:5000/api/employee/${id}`)
       .then((response) => {
-        console.log("Fetched employee data for editing:", response.data);
-        setEmployee(response.data);
+        console.log("Fetched data: ", response)
+        const employeeData= response.data[0];
+        setEmployee(employeeData)
       })
       .catch((error) => {
         console.error("Error fetching employee data:", error);
       });
   }, [id]);
+  
+  const formatDate = (dateTimeString) => {
+    const date = new Date(dateTimeString); // Create a new Date object from the dateTimeString
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so we add 1
+    const day = String(date.getDate()).padStart(2, '0');
+  
+    return `${year}-${month}-${day}`;
+  };
 
   return (
     <div className="container mt-4">
@@ -63,7 +73,7 @@ const ReadEmployees: React.FC = () => {
               <strong>Age:</strong> {employee.employeeAge}
             </li>
             <li className="list-group-item">
-              <strong>Date of Joining:</strong> {employee.employeeDOJ}
+              <strong>Date of Joining:</strong> {formatDate(employee.employeeDOJ)}
             </li>
             <li className="list-group-item">
               <strong>Remarks:</strong> {employee.employeeRemarks}
@@ -73,6 +83,9 @@ const ReadEmployees: React.FC = () => {
             </li>
             <li className="list-group-item">
               <strong>Accrued Leaves:</strong> {employee.employeeAcuredLeaves}
+            </li>
+            <li className="list-group-item">
+              <strong>Role ID:</strong> {employee.roleID}
             </li>
           </ul>
           <div className="d-flex gap-3 ms-3 pt-3">
