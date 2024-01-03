@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const EditHoliday: React.FC = () => {
+const EditHoliday = () => {
   const { id } = useParams();
   const [holiday, setHoliday] = useState<any>({});
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const EditHoliday: React.FC = () => {
   };
 
   const hasValidationErrors = () => {
-    const errors = {};
+    const errors: Record<string, string> = {};
 
     if (!holiday.holidayName.trim()) {
       errors.holidayName = "Name cannot be empty";
