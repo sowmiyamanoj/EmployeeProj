@@ -12,11 +12,11 @@ function ContactUs() {
         message: ""
     });
 
-    const [errorMessage, setErrorMessage] = useState("");
+    
     const [successMessage, setSuccessMessage] = useState("");
 
     useEffect(() => {
-        let timer;
+        let timer: number | undefined;
         if (successMessage === "success") {
             timer = setTimeout(() => {
                 setSuccessMessage("");
@@ -26,15 +26,9 @@ function ContactUs() {
     }, [successMessage]);
 
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        setErrorMessage("");
-        const { firstName, lastName, phonenumber, email, message } = formData;
-
-        if (!firstName || !lastName || !phonenumber || !email || !message) {
-            setErrorMessage("All fields are required!");
-            return;
-        }
+        
 
         axios.get("http://localhost:5000/email/", { params: formData })
             .then(() => setSuccessMessage("success"))
@@ -42,7 +36,7 @@ function ContactUs() {
             (console.error);
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: { target: { name: any; value: any; }; }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 

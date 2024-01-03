@@ -4,12 +4,12 @@ import { useNavigate, useParams } from "react-router-dom";
 
 
 interface RoleProps{
-    roleID: String;
-    roleName : String;
-    roleStatus: String;
-    roleDescription: String ;
-    createdDate:String;
-    ruleRights: String;
+    roleID: string;
+    roleName : string;
+    roleStatus: string;
+    roleDescription: string ;
+    createdDate:string;
+    ruleRights: string;
 }
 
 const RoleForm: React.FC = () => {
@@ -24,7 +24,7 @@ const  [role , setRole] = useState<RoleProps> ({
 
 });
 
-const handleChange=(e) => {
+const handleChange=(e: { target: { name: any; value: any; }; }) => {
     const{ name , value} = e.target;
     setRole({ ...role , [name]: value });
 };
@@ -36,7 +36,8 @@ const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
 
 const hasValidationErrors = () => {
-  const errors = {};
+  const errors: Record<string, string> = {};
+
 
   if (!role.roleName.trim()) {
     errors.roleName = "Name cannot be empty";
@@ -74,10 +75,10 @@ const handleSubmit = async (e: React.FormEvent) => {
     } else {
     axios
       .post("http://localhost:5000/api/roles/", role)
-      .then((res) => {
+      .then((res: any) => {
         console.log(res);
         })
-        .catch((err) => console.log(err));
+        .catch((err: any) => console.log(err));
         navigate('/ReadRole')
       }
     };

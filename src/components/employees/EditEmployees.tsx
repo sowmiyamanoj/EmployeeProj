@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const EditEmployee: React.FC = () => {
+const EditEmployee = () => {
   const { id } = useParams();
   const [employee, setEmployee] = useState<any>({});
   const navigate = useNavigate();
@@ -10,23 +10,24 @@ const EditEmployee: React.FC = () => {
 
   useEffect(() => {
     axios.get(`http://localhost:5000/api/employee/${id}`)
-        .then((response) => {
+        .then((response: { data: any[]; }) => {
             console.log("Fetched data: ", response)
             const employeeData = response.data[0];
             setEmployee(employeeData)
         })
-        .catch((error) => {
+        .catch((error: any) => {
             console.error("Error fetching role data:", error);
         });
 }, [id]);
 
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setEmployee({ ...employee, [name]: value });
   };
   const hasValidationErrors = () => {
-    const errors = {};
+    const errors: Record<string, string> = {};
+
     if (!employee.employeeName.trim()) {
       errors.employeeName = "Name cannot be empty";
     } else if (employee.employeeName.trim().length <= 4) {
@@ -85,11 +86,11 @@ const EditEmployee: React.FC = () => {
         console.log("Validation errors. Form not submitted.");
       } else {
     axios.put(`http://localhost:5000/api/employee/${id}`, employee)
-        .then((response) => {
+        .then((response: any) => {
             console.log("Updated Employee:", response);
             navigate('/DisplayEmployees')
         })
-        .catch((error) => {
+        .catch((error: any) => {
             console.error("Error updating Role:", error);
         });
 };
