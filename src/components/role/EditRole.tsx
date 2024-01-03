@@ -26,7 +26,7 @@ const EditRole: React.FC = () => {
     };
 
     const hasValidationErrors = () => {
-        const errors = {};
+        const errors: Record<string, string> = {};
       
         if (!role.roleName.trim()) {
           errors.roleName = "Name cannot be empty";

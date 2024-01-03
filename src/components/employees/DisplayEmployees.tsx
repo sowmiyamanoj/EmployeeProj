@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Deletecall.css";
 
-interface EmployeeProps {
-  EmployeeData;
-  onSelectItem: (item: EmployeeProps) => void;
-}
 
-const DisplayEmployee: React.FC<EmployeeProps> = () => {
+
+const DisplayEmployee = () => {
   const [data, setData] = useState<any[]>([]);
   const [deleteId, setDeleteId] = useState(null);
   const navigate = useNavigate();
@@ -23,11 +20,11 @@ const DisplayEmployee: React.FC<EmployeeProps> = () => {
       });
   }
 
-  const readEmployee = (id) => {
+  const readEmployee = (id: string) => {
     navigate("/ReadEmployee/" + id);
   }
 
-  const confirmDelete = (id) => {
+  const confirmDelete = (id: any) => {
     setDeleteId(id);
   }
 
@@ -35,11 +32,11 @@ const DisplayEmployee: React.FC<EmployeeProps> = () => {
     setDeleteId(null);
   }
 
-  const executeDelete = (id) => {
+  const executeDelete = (id: string) => {
     fetch("http://localhost:5000/api/employee/" + id, {
       method: "DELETE"
     })
-      .then((res) => {
+      .then(() => {
         getData();
         setDeleteId(null);
       })

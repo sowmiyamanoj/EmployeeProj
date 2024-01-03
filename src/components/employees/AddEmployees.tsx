@@ -1,10 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-interface EmployeeAddProps {
-  EmployeeAddData;
-}
 
 interface EmployeeProps {
   employeeID: string;
@@ -17,7 +14,7 @@ interface EmployeeProps {
   roleID:string;
 }
 
-export default function EmployeeForm(data: EmployeeAddProps) {
+export default function EmployeeForm() {
   const [employee, setEmployee] = useState<EmployeeProps>({
     employeeID: "",
     employeeName: "",
@@ -33,13 +30,13 @@ export default function EmployeeForm(data: EmployeeAddProps) {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setEmployee({ ...employee, [name]: value });
   };
 
   const hasValidationErrors = () => {
-    const errors = {};
+    const errors: Record<string, string> = {};
 
     if (!employee.employeeName.trim()) {
       errors.employeeName = "Name cannot be empty";

@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 
-interface TimeProps {
-  timeData: any;
-  onSelectItem: (item: TimeProps) => void;
-}
 
-const DisplayHoliday: React.FC<TimeProps> = () => {
+const DisplayTime = () => {
   const [data, setData] = useState<any[]>([]);
  
 
@@ -58,4 +54,4 @@ const DisplayHoliday: React.FC<TimeProps> = () => {
   );
 };
 
-export default DisplayHoliday;
+export default DisplayTime;
