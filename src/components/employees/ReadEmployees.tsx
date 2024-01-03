@@ -1,7 +1,7 @@
 import axios from "axios";
 import { SetStateAction, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "../DeleteCall.css";
+import "../Deletecall.css";
 
 const ReadEmployees: React.FC = () => {
   const { id } = useParams();
