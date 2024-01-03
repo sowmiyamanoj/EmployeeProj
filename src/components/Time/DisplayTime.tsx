@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 interface TimeProps {
-  timeData;
+  timeData: any;
   onSelectItem: (item: TimeProps) => void;
 }
 

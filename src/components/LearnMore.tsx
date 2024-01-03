@@ -1,6 +1,4 @@
 
-import React from 'react';
-
 const LearnMore = () => {
   return (
     <div className="sticky-top"> 

@@ -2,16 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-interface HolidayAddProps {
-  HolidayAddData;
-}
-
 interface HolidayProps {
   holidayName: string;
   holidayDateTime: string;
 }
 
-export default function HolidayForm(data: HolidayAddProps) {
+export default function HolidayForm() {
   const [holiday, setHoliday] = useState<HolidayProps>({
     holidayName: "",
     holidayDateTime: "",
@@ -20,7 +16,7 @@ export default function HolidayForm(data: HolidayAddProps) {
   const { opr } = useParams();
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setHoliday({ ...holiday, [name]: value });
   };
@@ -28,20 +24,20 @@ export default function HolidayForm(data: HolidayAddProps) {
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
 
   const hasValidationErrors = () => {
-    const errors = {};
+    const errors: Record<string, string> = {};
     if (!holiday.holidayName.trim()) {
       errors.holidayName = "Name cannot be empty";
     } else if (holiday.holidayName.trim().length <= 4) {
       errors.holidayName = "Name must have more than 4 letters";
     } else if (!/^[a-zA-Z. ]+$/.test(holiday.holidayName)) {
-      errors.holidayName= "Name must be uppercase letter, lowercase letters only";
+      errors.holidayName = "Name must be uppercase letter, lowercase letters only";
     }
-   
+
 
     if (!holiday.holidayDateTime.trim()) {
       errors.holidayDateTime = "Date cannot be empty";
-    } 
-    
+    }
+
     setErrorMsg(errors);
     return Object.keys(errors).length > 0;
   };
@@ -52,26 +48,26 @@ export default function HolidayForm(data: HolidayAddProps) {
     if (hasValidationErrors()) {
       console.log("Validation errors. Form not submitted.");
     } else {
-    axios
-      .post("http://localhost:5000/api/holiday/", holiday)
-      .then((res) => {
-        console.log(res);
-        navigate("/DisplayHolidays");
-      })
-      .catch((err) => console.log(err));
-  }
-};
+      axios
+        .post("http://localhost:5000/api/holiday/", holiday)
+        .then((res) => {
+          console.log(res);
+          navigate("/DisplayHolidays");
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
   useEffect(() => {
     setIsSubmitDisabled(hasValidationErrors());
-  }, [holiday,opr]);
+  }, [holiday, opr]);
 
   return (
     <div className="container border rounded p-4 mt-5 ">
       <h3 className="mb-4">Holiday Registration</h3>
       <form className="row col-xxl " onSubmit={handleSubmit}>
         <div className="col-md-6">
-        
+
           <label htmlFor="holidayName" className="form-label">
             Holiday Name
           </label>
@@ -84,7 +80,7 @@ export default function HolidayForm(data: HolidayAddProps) {
             onChange={handleChange}
             required
           />
-           {errorMsg.holidayName && <span style={{ color: "red" }}>{errorMsg.holidayName}</span>}
+          {errorMsg.holidayName && <span style={{ color: "red" }}>{errorMsg.holidayName}</span>}
         </div>
 
         <div className="col-6">
@@ -100,7 +96,7 @@ export default function HolidayForm(data: HolidayAddProps) {
             onChange={handleChange}
             required
           />
-           {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.holidayDateTime}</span>)}
+          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.holidayDateTime}</span>)}
         </div>
         <div className="p-5 text-center">
           <button type="submit" className="btn btn-success " disabled={isSubmitDisabled}>Submit</button>
@@ -109,4 +105,5 @@ export default function HolidayForm(data: HolidayAddProps) {
     </div>
   );
 }
+
 
