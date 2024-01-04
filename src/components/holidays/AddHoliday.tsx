@@ -15,6 +15,7 @@ export default function HolidayForm() {
   });
   const { opr } = useParams();
   const navigate = useNavigate();
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
@@ -49,7 +50,7 @@ export default function HolidayForm() {
       console.log("Validation errors. Form not submitted.");
     } else {
       axios
-        .post("http://localhost:5000/api/holiday/", holiday)
+        .post(`${baseUrl}/api/holiday/`, holiday)
         .then((res) => {
           console.log(res);
           navigate("/DisplayHolidays");

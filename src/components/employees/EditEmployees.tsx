@@ -9,7 +9,7 @@ const EditEmployee = () => {
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/employee/${id}`)
+    axios.get(`https://thaydb.vercel.app/api/employee/${id}`)
         .then((response: { data: any[]; }) => {
             console.log("Fetched data: ", response)
             const employeeData = response.data[0];
@@ -85,7 +85,7 @@ const EditEmployee = () => {
     if (hasValidationErrors()) {
         console.log("Validation errors. Form not submitted.");
       } else {
-    axios.put(`http://localhost:5000/api/employee/${id}`, employee)
+    axios.put(`https://thaydb.vercel.app/api/employee/${id}`, employee)
         .then((response: any) => {
             console.log("Updated Employee:", response);
             navigate('/DisplayEmployees')

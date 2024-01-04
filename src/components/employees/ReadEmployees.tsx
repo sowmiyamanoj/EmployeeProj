@@ -22,7 +22,7 @@ const ReadEmployees: React.FC = () => {
   }
 
   const executeDelete = (id: string) => {
-    fetch("http://localhost:5000/api/employee/" + id, {
+    fetch("https://thaydb.vercel.app/api/employee/" + id, {
       method: "DELETE"
     })
       .then(() => {
@@ -36,7 +36,7 @@ const ReadEmployees: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/employee/${id}`)
+      .get(`https://thaydb.vercel.app/api/employee/${id}`)
       .then((response: { data: any[]; }) => {
         console.log("Fetched data: ", response)
         const employeeData= response.data[0];

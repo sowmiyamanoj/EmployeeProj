@@ -7,9 +7,10 @@ const EditRole: React.FC = () => {
     const [role, setRole] = useState<any>({});
     const navigate = useNavigate();
     const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
+    const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/roles/${id}`)
+        axios.get(`${baseUrl}/api/roles/${id}`)
             .then((response) => {
                 console.log("Fetched data: ", response)
                 const roleData = response.data[0];
@@ -65,7 +66,7 @@ const EditRole: React.FC = () => {
         if (hasValidationErrors()) {
             console.log("Validation errors. Form not submitted.");
           } else {
-        axios.put(`http://localhost:5000/api/roles/${id}`, role)
+        axios.put(`${baseUrl}/api/roles/${id}`, role)
             .then((response) => {
                 console.log("Updated Role:", response.data);
                 navigate('/ReadRole')

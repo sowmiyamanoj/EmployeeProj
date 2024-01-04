@@ -31,7 +31,7 @@ const handleChange=(e: { target: { name: any; value: any; }; }) => {
 
 const { opr } = useParams();
 const navigate = useNavigate();
-
+const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
 
@@ -74,7 +74,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       console.log("Validation errors. Form not submitted.");
     } else {
     axios
-      .post("http://localhost:5000/api/roles/", role)
+      .post(`${baseUrl}/api/roles/`, role)
       .then((res: any) => {
         console.log(res);
         })

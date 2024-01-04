@@ -8,9 +8,10 @@ const ReadRole = () => {
   const [data, setData] = useState<any[]>([]);
   const navigate = useNavigate();
   const [deleteId, setDeleteId] = useState(null);
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   function getData() {
-    fetch("http://localhost:5000/api/roles")
+    fetch(`${baseUrl}/api/roles`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -33,7 +34,7 @@ const ReadRole = () => {
   
 
   const executeDelete = (id: string) => {
-    fetch("http://localhost:5000/api/roles/" + id, {
+    fetch(`${baseUrl}/api/roles/` + id, {
       method: "DELETE"
     })
       .then(() => {

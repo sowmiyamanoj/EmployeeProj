@@ -8,9 +8,10 @@ const DisplayEmployee = () => {
   const [data, setData] = useState<any[]>([]);
   const [deleteId, setDeleteId] = useState(null);
   const navigate = useNavigate();
-
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
+  
   function getData() {
-    fetch("http://localhost:5000/api/employee")
+    fetch(`${baseUrl}/api/employee`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -33,7 +34,7 @@ const DisplayEmployee = () => {
   }
 
   const executeDelete = (id: string) => {
-    fetch("http://localhost:5000/api/employee/" + id, {
+    fetch(`${baseUrl}/api/employee/` + id, {
       method: "DELETE"
     })
       .then(() => {

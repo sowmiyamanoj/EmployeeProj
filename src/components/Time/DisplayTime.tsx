@@ -3,10 +3,10 @@ import  { useEffect, useState } from "react";
 
 const DisplayTime = () => {
   const [data, setData] = useState<any[]>([]);
- 
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   function getData() {
-    fetch("http://localhost:5000/api/time")
+    fetch(`${baseUrl}/api/time`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);

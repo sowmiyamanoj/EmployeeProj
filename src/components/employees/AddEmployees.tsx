@@ -26,6 +26,7 @@ export default function EmployeeForm() {
     roleID:"",
   });
   const navigate = useNavigate();
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
@@ -98,7 +99,7 @@ export default function EmployeeForm() {
       console.log("Validation errors. Form not submitted.");
     } else {
       axios
-        .post("http://localhost:5000/api/employee/", employee)
+        .post(`${baseUrl}/api/employee/`, employee)
         .then((res) => {
           console.log(res);
           navigate("/DisplayEmployees");

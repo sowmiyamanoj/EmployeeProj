@@ -8,9 +8,10 @@ const DisplayHoliday = () => {
   const [data, setData] = useState<any[]>([]);
   const [deleteId, setDeleteId] = useState(null);
   const navigate = useNavigate();
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   function getData() {
-    fetch("http://localhost:5000/api/holiday")
+    fetch(`${baseUrl}/api/holiday`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -36,7 +37,7 @@ const DisplayHoliday = () => {
   }
 
   const executeDelete = (id: string) => {
-    fetch("http://localhost:5000/api/holiday/" + id, {
+    fetch(`${baseUrl}/api/holiday/` + id, {
       method: "DELETE"
     })
       .then(() => {

@@ -7,10 +7,11 @@ const EditHoliday = () => {
   const [holiday, setHoliday] = useState<any>({});
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/holiday/${id}`)
+    axios.get(`${baseUrl}/api/holiday/${id}`)
       .then((response) => {
         console.log("Fetched data: ", response)
         console.log("Fetched data: ", response)
@@ -57,7 +58,7 @@ const EditHoliday = () => {
     if (hasValidationErrors()) {
       console.log("Validation errors. Form not submitted.");
     } else {
-      axios.put(`http://localhost:5000/api/holiday/${id}`, holiday)
+      axios.put(`${baseUrl}/api/holiday/${id}`, holiday)
         .then((response) => {
           console.log("Updated holiday:", response.data);
           navigate('/DisplayHolidays')

@@ -5,7 +5,7 @@ function AddRecord() {
   const [employeeID, setEmployeeID] = useState<string>('');
   const [validationMessage, setValidationMessage] = useState<string>('');
   const [currentTime, setCurrentTime] = useState<string>('');
-
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   const handleCheckIn = async () => {
     if (!employeeID) {
@@ -14,7 +14,7 @@ function AddRecord() {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/time/checkin', { employeeID });
+      await axios.post(`${baseUrl}/api/time/checkin`, { employeeID });
       setValidationMessage('Checked in successfully');
     } catch (error) {
       console.error('Error checking in:', error);
@@ -29,7 +29,7 @@ function AddRecord() {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/time/checkout', { employeeID });
+      await axios.post(`${baseUrl}/api/time/checkout`, { employeeID });
       setValidationMessage('Checked out successfully');
     } catch (error) {
       console.error('Error checking out:', error);
