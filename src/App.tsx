@@ -29,7 +29,7 @@ function App() {
             <Routes>
               <Route path='*' element={<Home />} />
               <Route path='/DisplayEmployees' element={<DisplayEmployee />} />
-              <Route path='/ReadRole' element={<ReadRole onSelectItem/>} />
+              <Route path='/ReadRole' element={<ReadRole />} />
               <Route path='/DisplayHolidays' element={<DisplayHoliday />} />
               <Route path='/DisplayTime' element={<DisplayTime />} />
               <Route path='/AddEmployee' element={<AddEmployees />} />
