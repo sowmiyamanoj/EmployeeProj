@@ -6,6 +6,7 @@ const DisplayTime = () => {
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   function getData() {
+    SetBaseUrl("https://thaydb.vercel.app");
     fetch(`${baseUrl}/api/time`)
       .then((res) => res.json())
       .then((data) => {

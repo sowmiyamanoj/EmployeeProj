@@ -38,6 +38,7 @@ function AddRecord() {
   };
   
   useEffect(() => {
+    SetBaseUrl("https://thaydb.vercel.app");
     const intervalId = setInterval(() => {
       const date = new Date();
       setCurrentTime(date.toLocaleTimeString());
