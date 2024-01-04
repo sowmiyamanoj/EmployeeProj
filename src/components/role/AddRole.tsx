@@ -83,6 +83,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       }
     };
       useEffect(() => {
+        SetBaseUrl("https://thaydb.vercel.app");
         setIsSubmitDisabled(hasValidationErrors());
       }, [role,opr]);
     

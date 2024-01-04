@@ -11,6 +11,7 @@ const EditHoliday = () => {
 
 
   useEffect(() => {
+    SetBaseUrl("https://thaydb.vercel.app");
     axios.get(`${baseUrl}/api/holiday/${id}`)
       .then((response) => {
         console.log("Fetched data: ", response)

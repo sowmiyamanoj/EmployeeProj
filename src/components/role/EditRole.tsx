@@ -10,6 +10,7 @@ const EditRole: React.FC = () => {
     const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
     useEffect(() => {
+        SetBaseUrl("https://thaydb.vercel.app");
         axios.get(`${baseUrl}/api/roles/${id}`)
             .then((response) => {
                 console.log("Fetched data: ", response)

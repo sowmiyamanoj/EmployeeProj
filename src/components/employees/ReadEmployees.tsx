@@ -8,6 +8,7 @@ const ReadEmployees: React.FC = () => {
   const [employee, setEmployee] = useState<any>({});
   const [deleteId, setDeleteId] = useState(null);
   const navigate = useNavigate();
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   const updateEmployee = (id: string) => {
     navigate("/EditEmployee/" + id);
@@ -22,7 +23,7 @@ const ReadEmployees: React.FC = () => {
   }
 
   const executeDelete = (id: string) => {
-    fetch("https://thaydb.vercel.app/api/employee/" + id, {
+    fetch(`${baseUrl}/api/employee/` + id, {
       method: "DELETE"
     })
       .then(() => {
@@ -35,8 +36,9 @@ const ReadEmployees: React.FC = () => {
   }
 
   useEffect(() => {
+    SetBaseUrl("https://thaydb.vercel.app");
     axios
-      .get(`https://thaydb.vercel.app/api/employee/${id}`)
+      .get(`${baseUrl}/api/employee/${id}`)
       .then((response: { data: any[]; }) => {
         console.log("Fetched data: ", response)
         const employeeData= response.data[0];

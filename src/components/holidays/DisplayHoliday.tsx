@@ -11,6 +11,7 @@ const DisplayHoliday = () => {
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   function getData() {
+    SetBaseUrl("https://thaydb.vercel.app");
     fetch(`${baseUrl}/api/holiday`)
       .then((res) => res.json())
       .then((data) => {

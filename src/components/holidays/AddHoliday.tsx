@@ -60,6 +60,7 @@ export default function HolidayForm() {
   };
 
   useEffect(() => {
+    SetBaseUrl("https://thaydb.vercel.app");
     setIsSubmitDisabled(hasValidationErrors());
   }, [holiday, opr]);
 

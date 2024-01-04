@@ -11,6 +11,7 @@ const DisplayEmployee = () => {
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
   
   function getData() {
+    SetBaseUrl("https://thaydb.vercel.app");
     fetch(`${baseUrl}/api/employee`)
       .then((res) => res.json())
       .then((data) => {

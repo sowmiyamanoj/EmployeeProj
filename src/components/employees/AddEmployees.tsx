@@ -109,6 +109,7 @@ export default function EmployeeForm() {
   };
 
   useEffect(() => {
+    SetBaseUrl("https://thaydb.vercel.app");
     setIsSubmitDisabled(hasValidationErrors());
   }, [employee]);
 

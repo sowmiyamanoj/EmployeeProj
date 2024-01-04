@@ -7,9 +7,11 @@ const EditEmployee = () => {
   const [employee, setEmployee] = useState<any>({});
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   useEffect(() => {
-    axios.get(`https://thaydb.vercel.app/api/employee/${id}`)
+    SetBaseUrl("https://thaydb.vercel.app");
+    axios.get(`${baseUrl}/api/employee/${id}`)
         .then((response: { data: any[]; }) => {
             console.log("Fetched data: ", response)
             const employeeData = response.data[0];
@@ -85,7 +87,7 @@ const EditEmployee = () => {
     if (hasValidationErrors()) {
         console.log("Validation errors. Form not submitted.");
       } else {
-    axios.put(`https://thaydb.vercel.app/api/employee/${id}`, employee)
+    axios.put(`${baseUrl}/api/employee/${id}`, employee)
         .then((response: any) => {
             console.log("Updated Employee:", response);
             navigate('/DisplayEmployees')
