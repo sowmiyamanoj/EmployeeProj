@@ -6,7 +6,7 @@ function AddRecord() {
   const [validationMessage, setValidationMessage] = useState<string>('');
   const [currentTime, setCurrentTime] = useState<string>('');
 
-  const  Backend =`http://localhost:5000`
+  const  Backend =`https://thaydb.vercel.app`
   
   const handleCheckIn = async () => {
     if (!/^\d+$/.test(employeeID)) {
