@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../Deletecall.css";
 
 
 const DisplayHoliday = () => {
@@ -60,7 +59,6 @@ const DisplayHoliday = () => {
       </div>
       <div style={{ padding: "50px" }}>
         <table className="table table-hover table-bordered table-striped text-center">
-          <caption className="">List of Holidays </caption>
           <thead>
             <tr>
               <th>Holiday ID</th>

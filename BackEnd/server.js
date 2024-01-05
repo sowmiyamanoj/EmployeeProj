@@ -12,32 +12,25 @@ const sendEmail = require('./contactUs');
 
 app.use(cors())
 app.use(express.json())
+
 app.use('/api/employee', employeeRoutes);
 app.use((err,req,res,next) => {
   console.log(err)
   res.status(err.status || 500).send('Something went wrong!')
 })
 
-//middleware
-app.use(cors())
-app.use(express.json())
 app.use('/api/roles', rolesRoutes);
 app.use((err,req,res,next) => {
   console.log(err)
   res.status(err.status || 500).send('Something went wrong!')
 })
 
-//middleware
-app.use(cors())
-app.use(express.json())
 app.use('/api/holiday', holidayRoutes);
 app.use((err,req,res,next) => {
   console.log(err)
   res.status(err.status || 500).send('Something went wrong!')
 })
 
-app.use(cors())
-app.use(express.json())
 app.use('/api/time',timeRoutes);
 app.use((err,req,res,next) => {
   console.log(err)

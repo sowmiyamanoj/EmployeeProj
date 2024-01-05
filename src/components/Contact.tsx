@@ -30,7 +30,7 @@ function ContactUs() {
         e.preventDefault();
         
 
-        axios.get("http://localhost:5000/email/", { params: formData })
+        axios.get("https://thaydb.vercel.app/email/", { params: formData })
             .then(() => setSuccessMessage("success"))
             .catch
             (console.error);

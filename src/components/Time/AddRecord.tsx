@@ -5,40 +5,51 @@ function AddRecord() {
   const [employeeID, setEmployeeID] = useState<string>('');
   const [validationMessage, setValidationMessage] = useState<string>('');
   const [currentTime, setCurrentTime] = useState<string>('');
-  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
+  const  Backend =`http://localhost:5000`
+  
   const handleCheckIn = async () => {
-    if (!employeeID) {
-      setValidationMessage('Please enter Employee ID');
+    if (!/^\d+$/.test(employeeID)) {
+      setValidationMessage('Please enter a valid Employee ID ');
       return;
     }
-
     try {
-      await axios.post(`${baseUrl}/api/time/checkin`, { employeeID });
+      // Perform check-in
+      await axios.post(`${Backend}/api/time/checkin`, { employeeID });
       setValidationMessage('Checked in successfully');
     } catch (error) {
       console.error('Error checking in:', error);
-      setValidationMessage('Your Already Check in.');
+      setValidationMessage('Your Already CheckIn for Today');
     }
   };
 
   const handleCheckOut = async () => {
-    if (!employeeID) {
-      setValidationMessage('Please enter Employee ID');
+    const currentDate = new Date().toISOString().split('T')[0];
+    
+    try {
+      // Fetch existing check-out record for today
+      const response = await axios.get(`${Backend}/api/time/${employeeID}/${currentDate}`);
+      if (response.data.length > 0 && response.data[0].checkOutDateTime !== null) {
+        setValidationMessage('Your Already Checked Out for Today');
+        return;
+      }
+    } catch (error) {
+      console.error('Error fetching check-out details:', error);
+      setValidationMessage('Failed to check out. Please try again.');
       return;
     }
-
+  
     try {
-      await axios.post(`${baseUrl}/api/time/checkout`, { employeeID });
+      // Perform check-out
+      await axios.post(`${Backend}/api/time/checkout`, { employeeID });
       setValidationMessage('Checked out successfully');
     } catch (error) {
       console.error('Error checking out:', error);
-      setValidationMessage('Your Already Check Out');
+      setValidationMessage('Failed to check out. Please try again.');
     }
   };
-  
+
   useEffect(() => {
-    SetBaseUrl("https://thaydb.vercel.app");
     const intervalId = setInterval(() => {
       const date = new Date();
       setCurrentTime(date.toLocaleTimeString());

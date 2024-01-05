@@ -80,11 +80,14 @@ export default function EmployeeForm() {
     }
 
     if (!employee.employeeAcuredLeaves.trim()) {
-      errors.employeeAcuredLeaves = "cannot empty";
+      errors.employeeAcuredLeaves = "Acured Leaves cannot empty";
     } else if (!/^\d+$/.test(employee.employeeAcuredLeaves.trim())) {
       errors.employeeAcuredLeaves = "Accrued Leave must be a valid number";
     } else if (parseInt(employee.employeeAcuredLeaves, 10) > 24) {
       errors.employeeAcuredLeaves = "Accrued Leaves cannot exceed 24 days per year";
+    }
+    if(!employee.roleID){
+      errors.roleID = "RoleID cannot be empty"
     }
 
     setErrorMsg(errors);
@@ -233,6 +236,7 @@ export default function EmployeeForm() {
             value={employee.roleID}
             onChange={handleChange}
           />
+          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.roleID}</span>)}
           </div>
         <div className="p-5 text-center">
           <button type="submit" className="btn btn-success" disabled={isSubmitDisabled}>
