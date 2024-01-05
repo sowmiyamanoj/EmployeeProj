@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const AttendanceRecord = () => {
   const [data, setData] = useState<any[]>([]);
@@ -6,40 +7,43 @@ const AttendanceRecord = () => {
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [shouldFetchDefault, setShouldFetchDefault] = useState(false);
 
   const Backend = `https://thaydb.vercel.app`;
+  const defaultUrl = `${Backend}/api/time`;
+
+  const constructUrl = () => {
+    let url = defaultUrl;
+
+    if (searchEmployeeID) {
+      url += `/${searchEmployeeID}`;
+
+      if (startDate) {
+        url += `/${startDate}`;
+
+        if (endDate) {
+          url += `/${endDate}`;
+        }
+      }
+    } else if (startDate) {
+      url += `/date/${startDate}`;
+    }
+
+    return url;
+  };
 
   const handleSearch = () => {
     setErrorMessage(null);
 
-    let url = `${Backend}/api/time`;
+    const url = constructUrl();
 
-    if (searchEmployeeID !== null) {
-      url += `/${searchEmployeeID}`;
-
-      if (startDate !== null) {
-        url += `/${startDate}`;
-
-        if (endDate !== null) {
-          url += `/${endDate}`;
-        }
-      }
-    } else if (startDate !== null) {
-      url += `/date/${startDate}`;
-    }
-
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Invalid Input');
-        }
-        return res.json();
-      })
-      .then((responseData) => {
-        setData(responseData);
+    axios.get(url)
+      .then((response) => {
+        setData(response.data);
       })
       .catch((error) => {
-        setErrorMessage(error.message);
+        console.log(error)
+        setErrorMessage("Invalid Input");
       });
   };
 
@@ -47,11 +51,24 @@ const AttendanceRecord = () => {
     setSearchEmployeeID(null);
     setStartDate(null);
     setEndDate(null);
+    setShouldFetchDefault(true);
   };
 
   useEffect(() => {
-    handleSearch();
-  }, [searchEmployeeID, startDate, endDate]);
+    if (shouldFetchDefault) {
+      axios.get(defaultUrl)
+        .then((response) => {
+          setData(response.data);
+          setShouldFetchDefault(false); 
+        })
+        .catch((error) => {
+          setErrorMessage(error.message);
+          setShouldFetchDefault(false); 
+        });
+    } else {
+      handleSearch();
+    }
+  }, [shouldFetchDefault]);
 
   return (
     <>
@@ -75,6 +92,7 @@ const AttendanceRecord = () => {
             value={endDate || ''}
             onChange={(e) => setEndDate(e.target.value)}
           />
+          <button onClick={handleSearch} className="btn btn-primary ms-2">search</button>
           <button onClick={clearSearchCriteria} className="btn btn-secondary ms-2">Clear</button>
         </div>
         {errorMessage && <div className="mt-2" style={{ color: "red" }}>{errorMessage}</div>}
