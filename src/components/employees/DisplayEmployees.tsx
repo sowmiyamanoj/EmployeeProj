@@ -1,8 +1,5 @@
 import  { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../Deletecall.css";
-
-
 
 const DisplayEmployee = () => {
   const [data, setData] = useState<any[]>([]);
@@ -62,7 +59,6 @@ const DisplayEmployee = () => {
       </div>
       <div style={{ padding: "50px" }}>
         <table className="table table-hover table-bordered table-striped text-center">
-          <caption className="">List of Employees </caption>
           <thead>
             <tr>
               <th>Employee ID</th>

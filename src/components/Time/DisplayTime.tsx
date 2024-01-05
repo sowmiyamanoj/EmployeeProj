@@ -1,35 +1,89 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-
-const DisplayTime = () => {
+const AttendanceRecord = () => {
   const [data, setData] = useState<any[]>([]);
-  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
+  const [searchEmployeeID, setSearchEmployeeID] = useState<number | null>(null);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  function getData() {
-    SetBaseUrl("https://thaydb.vercel.app");
-    fetch(`${baseUrl}/api/time`)
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
+  const Backend = `http://localhost:5000`;
+
+  const handleSearch = () => {
+    setErrorMessage(null);
+
+    let url = `${Backend}/api/time`;
+
+    if (searchEmployeeID !== null) {
+      url += `/${searchEmployeeID}`;
+
+      if (startDate !== null) {
+        url += `/${startDate}`;
+
+        if (endDate !== null) {
+          url += `/${endDate}`;
+        }
+      }
+    } else if (startDate !== null) {
+      url += `/date/${startDate}`;
+    }
+
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Invalid Input');
+        }
+        return res.json();
+      })
+      .then((responseData) => {
+        setData(responseData);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        setErrorMessage(error.message);
       });
-  }
+  };
+
+  const clearSearchCriteria = () => {
+    setSearchEmployeeID(null);
+    setStartDate(null);
+    setEndDate(null);
+  };
 
   useEffect(() => {
-    getData();
-  }, [data]);
+    handleSearch();
+  }, [searchEmployeeID, startDate, endDate]);
 
   return (
     <>
       <div style={{ padding: "50px" }}>
-        <table className="table table-hover table-bordered table-striped text-center">
-          <caption className="">List of CheckIn And CheckOut </caption>
+        <div className="search-section d-flex gap-1">
+          <input
+            type="text"
+            placeholder="Enter Employee ID"
+            value={searchEmployeeID || ''}
+            onChange={(e) => setSearchEmployeeID(Number(e.target.value))}
+          />
+          <input
+            type="date"
+            placeholder="Start Date"
+            value={startDate || ''}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <input
+            type="date"
+            placeholder="End Date"
+            value={endDate || ''}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+          <button onClick={clearSearchCriteria} className="btn btn-secondary ms-2">Clear</button>
+        </div>
+        {errorMessage && <div className="mt-2" style={{ color: "red" }}>{errorMessage}</div>}
+
+        <table className="table table-hover table-bordered table-striped text-center mt-4">
           <thead>
             <tr>
-              <th>Entry ID</th>
               <th>Employee ID</th>
+              <th>Date</th>
               <th>CheckInDateTime</th>
               <th>CheckOutDateTime</th>
               <th>totalWorkingHours</th>
@@ -38,8 +92,8 @@ const DisplayTime = () => {
           <tbody className="table-group-divider">
             {data.map((d, i) => (
               <tr key={i}>
-                <td>{d.entryID}</td>
                 <td>{d.employeeID}</td>
+                <td>{d.date}</td>
                 <td>{d.checkInDateTime}</td>
                 <td>{d.checkOutDateTime}</td>
                 <td>{d.totalWorkingHours}</td>
@@ -47,12 +101,9 @@ const DisplayTime = () => {
             ))}
           </tbody>
         </table>
-      </div>
-     
-           
-    
+      </div >
     </>
   );
 };
 
-export default DisplayTime;
+export default AttendanceRecord;

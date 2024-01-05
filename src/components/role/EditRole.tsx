@@ -153,8 +153,7 @@ const EditRole: React.FC = () => {
                     />
                     {errorMsg.currentDate && <span style={{ color: "red" }}>{errorMsg.createdDate}</span>}
                 </div>
-
-
+                
                 <div className="col-md-6 me-3">
                     <label htmlFor="roleDescription" className="form-label">
                         Description

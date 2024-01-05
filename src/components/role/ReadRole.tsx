@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import '../Deletecall.css';
-
-
+import {useNavigate} from 'react-router-dom';
 
 const ReadRole = () => {
   const [data, setData] = useState<any[]>([]);
@@ -61,7 +58,6 @@ const ReadRole = () => {
       </div>
       <div style={{ padding: "50px" }}>
         <table className="table table-hover table-bordered table-striped text-center">
-          <caption className="">Role List </caption>
           <thead>
             <tr>
               <th>Role ID</th>

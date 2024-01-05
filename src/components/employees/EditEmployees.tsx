@@ -71,6 +71,9 @@ const EditEmployee = () => {
     } else if (parseInt(employee.employeeAcuredLeaves, 10) > 24) {
       errors.employeeAcuredLeaves = "Accrued Leaves cannot exceed 24 days per year";
     }
+    if(!employee.roleID){
+      errors.roleID = "RoleID cannot be empty"
+    }
 
     setErrorMsg(errors);
     return Object.keys(errors).length > 0;
@@ -207,6 +210,20 @@ const EditEmployee = () => {
           />
           {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.employeeAcuredLeaves}</span>)}
         </div>
+        <div className="col-md-2">
+          <label htmlFor="roleID" className="form-label">
+            roleID
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="roleID"
+            name="roleID"
+            value={employee.roleID}
+            onChange={handleChange}
+          />
+          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.roleID}</span>)}
+          </div>
         <div className="col-12 text-center mt-4">
           <button type="submit" className="btn btn-info me-3">Update</button>
           <button type="reset" className="btn btn-danger " onClick={backEmployee}>Back</button>
