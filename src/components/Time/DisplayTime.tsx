@@ -72,7 +72,8 @@ const AttendanceRecord = () => {
 
   return (
     <>
-      <div style={{ padding: "50px" }}>
+ 
+      <div style={{padding: "50px" }}>
         <div className="search-section d-flex gap-1">
           <input
             type="text"
@@ -119,7 +120,15 @@ const AttendanceRecord = () => {
             ))}
           </tbody>
         </table>
+        <style>
+      {`
+        body {
+          background: linear-gradient(to right, lightblue, #ffffff);
+        }
+      `}
+    </style>
       </div >
+      
     </>
   );
 };

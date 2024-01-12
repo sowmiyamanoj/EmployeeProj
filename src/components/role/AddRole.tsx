@@ -89,7 +89,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     
     
   return(
-    <div className="container border rounded p-4 mt-5">
+    <div className="container border rounded p-4 mt-5" style={{ backgroundColor:'white' }}>
       <h3 className="mb-4">Role Registration</h3>
       <form className="row col-xxl" onSubmit={handleSubmit}>
         <div className="col-md-6">
@@ -182,11 +182,18 @@ const handleSubmit = async (e: React.FormEvent) => {
      
 
         <div className="p-5 text-center">
-        <button type="submit" className="btn btn-success" disabled={isSubmitDisabled}>
+        <button type="submit" className="btn bg-primary text-white" disabled={isSubmitDisabled}>
           Submit
         </button>
         </div>
       </form>
+      <style>
+      {`
+        body {
+          background: linear-gradient(to right, lightblue, #ffffff);
+        }
+      `}
+    </style>
     </div>
 );
   };

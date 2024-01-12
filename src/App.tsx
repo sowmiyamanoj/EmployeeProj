@@ -18,6 +18,8 @@ import DisplayTime from './components/Time/DisplayTime';
 import ContactUs from './components/Contact';
 import AddRecord from './components/Time/AddRecord';
 import "./components/Deletecall.css"
+import PaySlip from './components/payslip/PaySlip';
+
 
 function App() {
 
@@ -43,6 +45,8 @@ function App() {
               <Route path='/ContactUs' element={<ContactUs />} />
               <Route path='/AboutUs' element={<AboutUs />} />
               <Route path='/AttendanceSheet' element={<AddRecord />} />
+              <Route path='/PaySlip' element={<PaySlip />} />
+         
             </Routes>
           </div>
         </Router>

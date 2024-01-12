@@ -58,7 +58,8 @@ const ReadEmployees: React.FC = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div style={{ backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)', minHeight: "100vh" }}>
+    <div className="container mt-0"  >
       <h3 className="mb-4">Employee Details</h3>
       <div className="card">
         <div className="card-body">
@@ -119,6 +120,7 @@ const ReadEmployees: React.FC = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };

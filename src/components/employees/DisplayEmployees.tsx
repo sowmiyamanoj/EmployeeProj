@@ -54,10 +54,10 @@ const DisplayEmployee = () => {
 
   return (
     <>
-      <div className="d-flex align-items-end flex-column">
+      <div className="d-flex align-items-end flex-column" style={{ backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)' }}>
         <button className="btn btn-info mt-3 me-4" onClick={AddEmployees}> + Add Employees</button>
       </div>
-      <div style={{ padding: "50px" }}>
+      <div style={{ backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)',padding: "50px" , minHeight: "100vh"}}>
         <table className="table table-hover table-bordered table-striped text-center">
           <thead>
             <tr>
