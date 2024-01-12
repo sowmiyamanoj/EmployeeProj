@@ -79,7 +79,7 @@ const EditRole: React.FC = () => {
 };
 
     return (
-        <div className="container border rounded p-4 mt-4">
+        <div className="container border rounded p-4 mt-4"  style={{ backgroundColor:'white' }}>
             <h3 className="mb-4">Edit Role</h3>
             <form className="row col-xxl" onSubmit={updateRole}>
                 <div className="col-md-6">
@@ -170,12 +170,19 @@ const EditRole: React.FC = () => {
                 </div>
 
                 <div className="p-5 text-center">
-                    <button type="submit" className="btn btn-success me-3">
+                    <button type="submit" className="btn btn-info me-3">
                         Update
                     </button>
                     <button type="reset" className="btn btn-danger " onClick={BackRole}>Back</button>
                 </div>
             </form>
+            <style>
+      {`
+        body {
+          background: linear-gradient(to right, lightblue, #ffffff);
+        }
+      `}
+    </style>
         </div>
     );
 };

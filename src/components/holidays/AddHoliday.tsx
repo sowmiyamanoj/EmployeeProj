@@ -65,7 +65,7 @@ export default function HolidayForm() {
   }, [holiday, opr]);
 
   return (
-    <div className="container border rounded p-4 mt-5 ">
+    <div className="container border rounded p-4 mt-5 " style={{ backgroundColor:'white' }}>
       <h3 className="mb-4">Holiday Registration</h3>
       <form className="row col-xxl " onSubmit={handleSubmit}>
         <div className="col-md-6">
@@ -101,9 +101,16 @@ export default function HolidayForm() {
           {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.holidayDateTime}</span>)}
         </div>
         <div className="p-5 text-center">
-          <button type="submit" className="btn btn-success " disabled={isSubmitDisabled}>Submit</button>
+          <button type="submit" className="btn bg-primary text-white " disabled={isSubmitDisabled}>Submit</button>
         </div>
       </form>
+      <style>
+      {`
+        body {
+          background: linear-gradient(to right, lightblue, #ffffff);
+        }
+      `}
+    </style>
     </div>
   );
 }

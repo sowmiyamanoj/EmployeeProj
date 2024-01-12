@@ -19,35 +19,40 @@ const CustomNavbar = () => {
   };
 
   return (
-    <Navbar expand="lg" expanded={expanded} style={{ borderBottom: "1px solid #ccc", backgroundColor: "lightblue" }} >
+    <Navbar expand="lg" expanded={expanded} style={{ borderBottom: "1px solid #ccc",  backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)'}} >
       <Navbar.Brand as={NavLink} to="/" className="p-2">
-        <h3> Thay Technology </h3>
-        <h6>private limited</h6>
+        <h3 style={{ fontFamily: 'Times New Roman", Times, serif' }}> THAY TECHNOLOGIES</h3>
+        <h5 style={{ fontFamily: 'Times New Roman", Times, serif' }}> Private Limited</h5>
+
       </Navbar.Brand>
       <Navbar.Toggle className="me-3" aria-controls="responsive-navbar-nav" onClick={() => setExpanded(!expanded)} />
       <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
         <Nav>
-        <Nav.Link as={NavLink} to="/AttendanceSheet" className="p-3" onClick={handleNavClick}>
+        <Nav.Link as={NavLink} to="/AttendanceSheet" className="p-3" onClick={handleNavClick} style={{  fontFamily: 'Times New Roman", Times, serif'}}>
              Attendance Sheet
           </Nav.Link>
-          <Nav.Link as={NavLink} to="/DisplayEmployees" className="p-3" onClick={handleNavClick}>
+          <Nav.Link as={NavLink} to="/DisplayEmployees" className="p-3" onClick={handleNavClick} style={{  fontFamily: 'Times New Roman", Times, serif'}}>
             Employees List
           </Nav.Link>
-          <Nav.Link as={NavLink} to="/ReadRole" className="p-3" onClick={handleNavClick}>
+          <Nav.Link as={NavLink} to="/ReadRole" className="p-3" onClick={handleNavClick} style={{  fontFamily: 'Times New Roman", Times, serif'}}>
             Role Details
           </Nav.Link>
-          <Nav.Link as={NavLink} to="/DisplayHolidays" className="p-3" onClick={handleNavClick}>
+          <Nav.Link as={NavLink} to="/DisplayHolidays" className="p-3" onClick={handleNavClick} style={{  fontFamily: 'Times New Roman", Times, serif'}}>
             Holiday list
           </Nav.Link>
-          <Nav.Link as={NavLink} to="/AboutUs" className="p-3" onClick={handleNavClick}>
+          <Nav.Link as={NavLink} to="/AboutUs" className="p-3" onClick={handleNavClick} style={{  fontFamily: 'Times New Roman", Times, serif'}}>
             About
           </Nav.Link>
-          <Nav.Link as={NavLink} to="/ContactUs" className="p-3" onClick={handleNavClick}>
+          <Nav.Link as={NavLink} to="/ContactUs" className="p-3" onClick={handleNavClick} style={{  fontFamily: 'Times New Roman", Times, serif'}}>
             Contact
           </Nav.Link>
-          <Nav.Link as={NavLink} to="/DisplayTime" className="p-3" onClick={handleNavClick}>
+          <Nav.Link as={NavLink} to="/DisplayTime" className="p-3" onClick={handleNavClick} style={{  fontFamily: 'Times New Roman", Times, serif'}}>
             Attendence 
           </Nav.Link>
+          <Nav.Link as={NavLink} to="/PaySlip" className="p-3" onClick={handleNavClick} style={{  fontFamily: 'Times New Roman", Times, serif'}}>
+            PaySlip
+          </Nav.Link>
+         
         </Nav>
       </Navbar.Collapse>
     </Navbar>

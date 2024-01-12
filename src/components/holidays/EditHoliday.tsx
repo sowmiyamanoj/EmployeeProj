@@ -71,7 +71,7 @@ const EditHoliday = () => {
   };
 
   return (
-    <div className="container border p-4 rounded mt-4">
+    <div className="container border p-4 rounded mt-4" style={{ backgroundColor:'white' }}>
       <h3 className="mb-4">Edit Holiday</h3>
       <form className="row g-3" onSubmit={updateHoliday}>
 
@@ -109,6 +109,13 @@ const EditHoliday = () => {
           <button type="button" className="btn btn-danger" onClick={Backholiday}>Back</button>
         </div>
       </form>
+      <style>
+      {`
+        body {
+          background: linear-gradient(to right, lightblue, #ffffff);
+        }
+      `}
+    </style>
     </div>
   );
 };

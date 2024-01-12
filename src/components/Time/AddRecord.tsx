@@ -59,7 +59,7 @@ function AddRecord() {
   }, []);
 
   return (
-    <div className="App d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
+    <div className="App d-flex justify-content-center align-items-center" style={{backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)',  minHeight: '80vh' }}>
       <div className="text-center">
         <h2 className="p-4">Employee Attendance</h2>
         <p className="mb-4">Current Time: {currentTime}</p>

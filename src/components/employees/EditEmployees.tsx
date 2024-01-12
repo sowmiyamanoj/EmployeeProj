@@ -103,7 +103,7 @@ const EditEmployee = () => {
 
 
   return (
-    <div className="container border rounded p-4 mt-5">
+    <div className="container border rounded p-4 mt-5" style={{ backgroundColor:'white' }}>
       <h3 className="mb-4">Employee Registration</h3>
       <form className="row col-xxl" onSubmit={updateEmployee}>
         <div className="col-md-6">
@@ -229,6 +229,13 @@ const EditEmployee = () => {
           <button type="reset" className="btn btn-danger " onClick={backEmployee}>Back</button>
         </div>
       </form>
+      <style>
+      {`
+        body {
+          background: linear-gradient(to right, lightblue, #ffffff);
+        }
+      `}
+    </style>
     </div>
   );
 };
