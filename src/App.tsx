@@ -17,40 +17,49 @@ import LearnMore from './components/LearnMore';
 import DisplayTime from './components/Time/DisplayTime';
 import ContactUs from './components/Contact';
 import AddRecord from './components/Time/AddRecord';
-import "./components/Deletecall.css"
+import "./components/Deletecall.css";
 import PaySlip from './components/payslip/PaySlip';
-
+import Login from './components/login/Login';
+import { AuthProvider } from './components/login/AuthContext';
+import SignUp from './components/login/Signup';
+import ProtectedRoute from './components/login/ProtectedRoute'
 
 function App() {
+  const protectedRoutes = [
+    { path: '/DisplayEmployees', component: DisplayEmployee, allowedRoles: ['admin', 'superuser'] },
+    { path: '/AddEmployee', component: AddEmployees, allowedRoles: ['admin'] },
+    { path: '/EditEmployee/:id', component: EditEmployee, allowedRoles: ['admin'] },
+    { path: '/ReadEmployee/:id', component: ReadEmployees, allowedRoles: ['admin', 'employee' , 'superuser'] },
+    { path: '/ReadRole', component: ReadRole, allowedRoles: ['admin', 'superuser'] },
+    { path: '/DisplayHolidays', component: DisplayHoliday, allowedRoles: ['admin', 'employee', 'superuser'] },
+    { path: '/DisplayTime', component: DisplayTime, allowedRoles: ['admin', 'superuser'] },
+    { path: '/AddRole', component: AddRole, allowedRoles: ['admin'] },
+    { path: '/EditRole/:id', component: EditRole, allowedRoles: ['admin'] },
+    { path: '/AddHoliday', component: AddHoliday, allowedRoles: ['admin'] },
+    { path: '/EditHoliday/:id', component: EditHoliday, allowedRoles: ['admin'] },
+    { path: '/AttendanceSheet', component: AddRecord, allowedRoles: ['admin', 'employee' , 'superuser'] },
+    { path: '/PaySlip', component: PaySlip, allowedRoles: ['admin', 'superuser'] },
+  ];
 
   return (
-      <>
-        <Router>
-          <div className='App'>
-            <Navbar />
-            <Routes>
-              <Route path='*' element={<Home />} />
-              <Route path='/DisplayEmployees' element={<DisplayEmployee />} />
-              <Route path='/ReadRole' element={<ReadRole />} />
-              <Route path='/DisplayHolidays' element={<DisplayHoliday />} />
-              <Route path='/DisplayTime' element={<DisplayTime />} />
-              <Route path='/AddEmployee' element={<AddEmployees />} />
-              <Route path='/AddRole' element={<AddRole />} />
-              <Route path='/EditEmployee/:id' element={<EditEmployee />} />
-              <Route path='/ReadEmployee/:id' element={<ReadEmployees />} />
-              <Route path='/EditRole/:id' element={<EditRole />} />
-              <Route path='/AddHoliday' element={<AddHoliday />} />
-              <Route path='/EditHoliday/:id' element={<EditHoliday />} />
-              <Route path='/learnMore' element={<LearnMore />} />
-              <Route path='/ContactUs' element={<ContactUs />} />
-              <Route path='/AboutUs' element={<AboutUs />} />
-              <Route path='/AttendanceSheet' element={<AddRecord />} />
-              <Route path='/PaySlip' element={<PaySlip />} />
-         
-            </Routes>
-          </div>
-        </Router>
-      </>
+    <Router>
+      <AuthProvider>
+        <div className='App'>
+          <Navbar />
+          <Routes>
+            <Route path='*' element={<Home />} />
+            {protectedRoutes.map(({ path, component: Component, allowedRoles }) => (
+              <Route key={path} path={path} element={<ProtectedRoute allowedRoles={allowedRoles}><Component /></ProtectedRoute>} />
+            ))}
+            <Route path='/learnMore' element={<LearnMore />} />
+            <Route path='/ContactUs' element={<ContactUs />} />
+            <Route path='/AboutUs' element={<AboutUs />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/signup' element={<SignUp />} />
+          </Routes>
+        </div>
+      </AuthProvider>
+    </Router>
   );
 }
 

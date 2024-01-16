@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../login/AuthContext";
 
 
 interface EmployeeProps {
@@ -9,9 +10,11 @@ interface EmployeeProps {
   employeeAge: string;
   employeeDOJ: string;
   employeeRemarks: string;
-  employeeAcuredLeaves: string;
+  employeeAccruedLeaves: string;
   employeeGender: string;
-  roleID:string;
+  roleName:string;
+  email:string;
+  password:string;
 }
 
 export default function EmployeeForm() {
@@ -21,16 +24,18 @@ export default function EmployeeForm() {
     employeeAge: "",
     employeeDOJ: "",
     employeeRemarks: "",
-    employeeAcuredLeaves: "",
+    employeeAccruedLeaves: "",
     employeeGender: "",
-    roleID:"",
+    roleName:"",
+    email:"",
+    password:"",
   });
   const navigate = useNavigate();
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
-
+  const {token} = useAuth();
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setEmployee({ ...employee, [name]: value });
@@ -41,7 +46,7 @@ export default function EmployeeForm() {
 
     if (!employee.employeeName.trim()) {
       errors.employeeName = "Name cannot be empty";
-    } else if (employee.employeeName.trim().length < 4) {
+    } else if (employee.employeeName.trim().length < 3) {
       errors.employeeName = "Name must have more than 4 letters";
     } else if (!/^[a-zA-Z. ]+$/.test(employee.employeeName)) {
       errors.employeeName = "Name must be uppercase letter, lowercase letters only";
@@ -79,17 +84,19 @@ export default function EmployeeForm() {
       errors.employeeGender = "Gender cannot be empty";
     }
 
-    if (!employee.employeeAcuredLeaves.trim()) {
-      errors.employeeAcuredLeaves = "Acured Leaves cannot empty";
-    } else if (!/^\d+$/.test(employee.employeeAcuredLeaves.trim())) {
-      errors.employeeAcuredLeaves = "Accrued Leave must be a valid number";
-    } else if (parseInt(employee.employeeAcuredLeaves, 10) > 24) {
-      errors.employeeAcuredLeaves = "Accrued Leaves cannot exceed 24 days per year";
+    if (!employee.employeeAccruedLeaves.trim()) {
+      errors.employeeAccruedLeaves = "Acured Leaves cannot empty";
+    } else if (!/^\d+$/.test(employee.employeeAccruedLeaves.trim())) {
+      errors.employeeAccruedLeaves = "Accrued Leave must be a valid number";
+    } else if (parseInt(employee.employeeAccruedLeaves, 10) > 24) {
+      errors.employeeAccruedLeaves = "Accrued Leaves cannot exceed 24 days per year";
     }
-    if(!employee.roleID){
-      errors.roleID = "RoleID cannot be empty"
+    if(!employee.roleName){
+      errors.roleName = "RoleName cannot be empty"
     }
-
+    if(!employee.email){
+      errors.email = "Email cannot be empty"
+    }
     setErrorMsg(errors);
 
     return Object.keys(errors).length > 0;
@@ -102,7 +109,11 @@ export default function EmployeeForm() {
       console.log("Validation errors. Form not submitted.");
     } else {
       axios
-        .post(`${baseUrl}/api/employee/`, employee)
+        .post(`${baseUrl}/api/employee/`, employee,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }}
+        )
         .then((res) => {
           console.log(res);
           navigate("/DisplayEmployees");
@@ -110,7 +121,11 @@ export default function EmployeeForm() {
         .catch((err) => console.log(err));
     }
   };
-
+  
+  const backEmployee = () => {
+    navigate(-1);
+  };
+  
   useEffect(() => {
     SetBaseUrl("https://thaydb.vercel.app");
     setIsSubmitDisabled(hasValidationErrors());
@@ -149,6 +164,36 @@ export default function EmployeeForm() {
             onChange={handleChange}
           />
           {errorMsg.employeeName && <span style={{ color: "red" }}>{errorMsg.employeeName}</span>}
+        </div>
+        
+        <div className="col-md-6">
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
+          <input
+            type="email"
+            className="form-control"
+            id="email"
+            name="email"
+            value={employee.email}
+            onChange={handleChange}
+          />
+          {errorMsg.email && <span style={{ color: "red" }}>{errorMsg.email}</span>}
+        </div>
+
+        <div className="col-md-6">
+          <label htmlFor="password" className="form-label">
+            Password
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="password"
+            name="password"
+            disabled
+            value={employee.password = "password@123"}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="col-md-6">
@@ -219,29 +264,37 @@ export default function EmployeeForm() {
             type="text"
             className="form-control"
             id="AccruedLeaves"
-            name="employeeAcuredLeaves"
-            value={employee.employeeAcuredLeaves}
+            name="employeeAccruedLeaves"
+            value={employee.employeeAccruedLeaves}
             onChange={handleChange}
           />
-          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.employeeAcuredLeaves}</span>)}
+          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.employeeAccruedLeaves}</span>)}
         </div>
         <div className="col-md-2">
-          <label htmlFor="roleID" className="form-label">
-            roleID
+          <label htmlFor="roleName" className="form-label">
+            Role Name
           </label>
-          <input
-            type="text"
-            className="form-control"
-            id="roleID"
-            name="roleID"
-            value={employee.roleID}
+          <select
+            id="roleName"
+            className="form-select"
+            name="roleName"
+            value={employee.roleName}
             onChange={handleChange}
-          />
-          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.roleID}</span>)}
+          >
+            <option selected>Choose...</option>
+            <option>admin</option>
+            <option>superuser</option>
+            <option>employee</option>
+            <option>guest</option>
+          </select>
+          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.roleName}</span>)}
           </div>
         <div className="p-5 text-center">
           <button type="submit" className="btn bg-primary text-white" disabled={isSubmitDisabled}>
             Submit
+          </button>
+          <button type="submit" className="btn bg-danger text-white ms-3" onClick = {backEmployee}>
+            back
           </button>
         </div>
       </form>

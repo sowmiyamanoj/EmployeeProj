@@ -3,7 +3,7 @@ const router = express.Router();
 
 const service = require('../services/payslipService')
 
-router.get("/payslips/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const paySlip = await service.generatePaySlip(req.params.id);
     res.status(200).json(paySlip);

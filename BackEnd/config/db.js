@@ -2,11 +2,10 @@ const mysql = require('mysql2/promise')
 
 const mysqlPool = mysql.createPool({
   host:'sql12.freesqldatabase.com',
-  user:'sql12675141',
-  password:'njikC2Hnyz',
-  database:'sql12675141',
+  user:'sql12677318',
+  password:'VKUppXQLhF',
+  database:'sql12677318',
   
 })
 
-
-module.exports = mysqlPool;
+module.exports=mysqlPool;

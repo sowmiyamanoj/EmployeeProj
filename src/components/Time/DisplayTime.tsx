@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "../login/AuthContext";
 
 const AttendanceRecord = () => {
   const [data, setData] = useState<any[]>([]);
@@ -8,6 +9,7 @@ const AttendanceRecord = () => {
   const [endDate, setEndDate] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [shouldFetchDefault, setShouldFetchDefault] = useState(false);
+  const { token } = useAuth();
 
   const Backend = `https://thaydb.vercel.app`;
   const defaultUrl = `${Backend}/api/time`;
@@ -37,13 +39,17 @@ const AttendanceRecord = () => {
 
     const url = constructUrl();
 
-    axios.get(url)
+    axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
       .then((response) => {
         setData(response.data);
       })
       .catch((error) => {
-        console.log(error)
-        setErrorMessage("Invalid Input");
+        console.error("Error fetching data:", error);
+        setErrorMessage("Invalid Input or Error fetching data");
       });
   };
 
@@ -56,24 +62,29 @@ const AttendanceRecord = () => {
 
   useEffect(() => {
     if (shouldFetchDefault) {
-      axios.get(defaultUrl)
+      axios.get(defaultUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
         .then((response) => {
           setData(response.data);
-          setShouldFetchDefault(false); 
+          setShouldFetchDefault(false);
         })
         .catch((error) => {
+          console.error("Error fetching default data:", error);
           setErrorMessage(error.message);
-          setShouldFetchDefault(false); 
+          setShouldFetchDefault(false);
         });
     } else {
       handleSearch();
     }
-  }, [shouldFetchDefault]);
+  }, [shouldFetchDefault, token]);
 
   return (
     <>
- 
-      <div style={{padding: "50px" }}>
+
+      <div style={{ padding: "50px" }}>
         <div className="search-section d-flex gap-1">
           <input
             type="text"
@@ -121,14 +132,10 @@ const AttendanceRecord = () => {
           </tbody>
         </table>
         <style>
-      {`
-        body {
-          background: linear-gradient(to right, lightblue, #ffffff);
-        }
-      `}
-    </style>
+          {`body {  background: linear-gradient(to right, lightblue, #ffffff);`}
+        </style>
       </div >
-      
+
     </>
   );
 };

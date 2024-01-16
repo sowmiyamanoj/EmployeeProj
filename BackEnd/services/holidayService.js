@@ -10,22 +10,17 @@ module.exports.getHolidayByID = async (id) => {
     "SELECT * FROM holiday WHERE holidayID = ?",
     [id]
   );
-  return records;
+  return records[0]; // Assuming you want to return the first record if found
 };
 
-module.exports.updateHoliday = async(update,id) =>{
-  const {holidayName=req.body.holidayName,
-   holidayDateTime = req.body.holidayDateTime
-} =update;
-const [result] =await db.query(
-'UPDATE holiday SET holidayName =?,holidayDateTime=? where holidayID =?',[
-  holidayName,
-  holidayDateTime,
-  id
-]
-);
-return result.affectedRows;
-}
+module.exports.updateHoliday = async (update, id) => {
+  const { holidayName = update.holidayName, holidayDateTime = update.holidayDateTime } = update;
+  const [result] = await db.query(
+    'UPDATE holiday SET holidayName = ?, holidayDateTime = ? WHERE holidayID = ?',
+    [holidayName, holidayDateTime, id]
+  );
+  return result.affectedRows;
+};
 
 module.exports.deleteHoliday = async (id) => {
   const [{ affectedRows }] = await db.query(
@@ -35,37 +30,11 @@ module.exports.deleteHoliday = async (id) => {
   return affectedRows;
 };
 
-/* module.exports.createEmployee = async (obj) => {
-  const [{affectedRows}] = await db.query("CALL employee(?,?,?,?,?,?,?,?)", 
-  [obj.employeeID,obj.employeeName, obj.employeeAge,obj.employeeGender,
-    obj.employeeDOJ,obj.employeeRemarks,obj.employeeAcuredLeaves,obj.roleID])
-  return affectedRows;
-}
-
-module.exports.updateEmployee = async (obj,id = 0) => {
-  const [[[{affectedRows}]]] = await db.query("CALL employee(?,?,?,?,?,?,?,?)", 
-  [id,obj.employeeID,obj.employeeName, obj.employeeAge,obj.employeeGender,
-    obj.employeeDOJ,obj.employeeRemarks,obj.employeeAcuredLeaves,obj.roleID])
-  return affectedRows;
-} */
-
 module.exports.createHoliday = async (holidayData) => {
-  const {
-    holidayID,
-    holidayName,
-    holidayDateTime,
-   
-  } = holidayData;
+  const { holidayName, holidayDateTime } = holidayData;
   const [result] = await db.query(
-    "INSERT INTO `holiday` (`holidayID`, `holidayName`, `holidayDateTime`) VALUES (?, ?,?)",
-    [
-      holidayID,
-      holidayName,
-      holidayDateTime,
-     
-      
-    ]
+    "INSERT INTO holiday (holidayName, holidayDateTime) VALUES (?, ?)",
+    [holidayName, holidayDateTime]
   );
-  
   return result.insertId;
 };

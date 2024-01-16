@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../login/AuthContext";
 
 interface HolidayProps {
   holidayName: string;
@@ -16,7 +17,8 @@ export default function HolidayForm() {
   const { opr } = useParams();
   const navigate = useNavigate();
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
-
+  const { token } = useAuth();
+  
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setHoliday({ ...holiday, [name]: value });
@@ -50,7 +52,10 @@ export default function HolidayForm() {
       console.log("Validation errors. Form not submitted.");
     } else {
       axios
-        .post(`${baseUrl}/api/holiday/`, holiday)
+        .post(`${baseUrl}/api/holiday/`, holiday,
+        { headers: {
+          Authorization: `Bearer ${token}`
+        }})
         .then((res) => {
           console.log(res);
           navigate("/DisplayHolidays");
@@ -60,7 +65,7 @@ export default function HolidayForm() {
   };
 
   useEffect(() => {
-    SetBaseUrl("https://thaydb.vercel.app");
+    SetBaseUrl("http://localhost:5000");
     setIsSubmitDisabled(hasValidationErrors());
   }, [holiday, opr]);
 

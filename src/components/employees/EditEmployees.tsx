@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../login/AuthContext";
 
 const EditEmployee = () => {
   const { id } = useParams();
@@ -8,12 +9,15 @@ const EditEmployee = () => {
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
+  const { token } = useAuth();
 
   useEffect(() => {
     SetBaseUrl("https://thaydb.vercel.app");
-    axios.get(`${baseUrl}/api/employee/${id}`)
-        .then((response: { data: any[]; }) => {
-            console.log("Fetched data: ", response)
+    axios.get(`${baseUrl}/api/employee/${id}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }})
+        .then((response) => {
             const employeeData = response.data[0];
             setEmployee(employeeData)
         })
@@ -27,19 +31,20 @@ const EditEmployee = () => {
     const { name, value } = e.target;
     setEmployee({ ...employee, [name]: value });
   };
+  
   const hasValidationErrors = () => {
     const errors: Record<string, string> = {};
 
     if (!employee.employeeName.trim()) {
       errors.employeeName = "Name cannot be empty";
-    } else if (employee.employeeName.trim().length <= 4) {
+    } else if (employee.employeeName.trim().length < 3) {
       errors.employeeName = "Name must have more than 4 letters";
     } else if (!/^[a-zA-Z. ]+$/.test(employee.employeeName)) {
       errors.employeeName = "Name must be uppercase letter, lowercase letters only";
     }
-    if (!employee.employeeID.trim()) {
+    if (!employee.employeeID) {
       errors.employeeID = "ID cannot be empty";
-    } else if (!/^\d+$/.test(employee.employeeID.trim())) {
+    } else if (!/^\d+$/.test(employee.employeeID)) {
       errors.employeeID = "ID must be a number";
     }
     if(!employee.employeeAge){
@@ -47,7 +52,7 @@ const EditEmployee = () => {
     }else if (!/^(1[8-9]|[2-7]\d|80)$/.test(employee.employeeAge)) {
       errors.employeeAge = "Age not Valid";
     }
-    if (!employee.employeeDOJ.trim()) {
+    if (!employee.employeeDOJ) {
       errors.employeeDOJ = "Date of Joining cannot be empty";
     } else {
       const dojDate = new Date(employee.employeeDOJ);
@@ -58,21 +63,14 @@ const EditEmployee = () => {
         errors.employeeDOJ = "Date of Joining must be within the last two months";
       }
     }
-    if (!employee.employeeRemarks.trim()) {
+    if (!employee.employeeRemarks) {
       errors.employeeRemarks = "Remarks cannot be empty";
     }
     if (!employee.employeeGender) {
       errors.employeeGender = "Gender cannot be empty";
     }
-    if (!employee.employeeAcuredLeaves) {
-      errors.employeeAcuredLeaves = "cannot empty";
-    } else if (!/^\d+$/.test(employee.employeeAcuredLeaves)) {
-      errors.employeeAcuredLeaves = "Accrued Leave must be a valid number";
-    } else if (parseInt(employee.employeeAcuredLeaves, 10) > 24) {
-      errors.employeeAcuredLeaves = "Accrued Leaves cannot exceed 24 days per year";
-    }
-    if(!employee.roleID){
-      errors.roleID = "RoleID cannot be empty"
+    if(!employee.roleName){
+      errors.roleName = "roleName cannot be empty"
     }
 
     setErrorMsg(errors);
@@ -90,7 +88,10 @@ const EditEmployee = () => {
     if (hasValidationErrors()) {
         console.log("Validation errors. Form not submitted.");
       } else {
-    axios.put(`${baseUrl}/api/employee/${id}`, employee)
+    axios.put(`${baseUrl}/api/employee/${id}`, employee,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }})
         .then((response: any) => {
             console.log("Updated Employee:", response);
             navigate('/DisplayEmployees')
@@ -115,7 +116,6 @@ const EditEmployee = () => {
             className="form-control"
             id="Id"
             name="employeeID"
-            disabled
             value={employee.employeeID}
             onChange={handleChange}
 
@@ -204,25 +204,30 @@ const EditEmployee = () => {
             type="text"
             className="form-control"
             id="AccruedLeaves"
-            name="employeeAcuredLeaves"
-            value={employee.employeeAcuredLeaves}
+            name="employeeAccruedLeaves"
+            value={employee.employeeAccruedLeaves}
             onChange={handleChange}
           />
-          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.employeeAcuredLeaves}</span>)}
+          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.employeeAccruedLeaves}</span>)}
         </div>
         <div className="col-md-2">
-          <label htmlFor="roleID" className="form-label">
-            roleID
+          <label htmlFor="roleName" className="form-label">
+            roleName
           </label>
-          <input
-            type="text"
-            className="form-control"
-            id="roleID"
-            name="roleID"
-            value={employee.roleID}
+          <select
+            id="roleName"
+            className="form-select"
+            name="roleName"
+            value={employee.roleName}
             onChange={handleChange}
-          />
-          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.roleID}</span>)}
+          >
+            <option selected>Choose...</option>
+            <option>admin</option>
+            <option>superuser</option>
+            <option>employee</option>
+            <option>guest</option>
+          </select>
+          {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.roleName}</span>)}
           </div>
         <div className="col-12 text-center mt-4">
           <button type="submit" className="btn btn-info me-3">Update</button>

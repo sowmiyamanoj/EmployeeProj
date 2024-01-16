@@ -5,7 +5,7 @@ module.exports.getAllRoles = async () => {
   return records;
 };
 
-module.exports.getRoleID = async (id) => {
+module.exports.getRoleByID = async (id) => {
   const [records] = await db.query(
     "SELECT * FROM roles WHERE roleID = ?",
     [id]
@@ -21,15 +21,16 @@ module.exports.deleteRole = async (id) => {
   return affectedRows;
 };
 
-module.exports.createRole = async (rolesData) => {
+module.exports.createRole = async (roleData) => {
   const {
-  roleID,
-  roleName,
-  roleStatus,
-  createdDate,
-  roleDescription,
-  ruleRights,
-  } = rolesData;
+    roleID,
+    roleName,
+    roleStatus,
+    createdDate,
+    roleDescription,
+    ruleRights,
+  } = roleData;
+
   const [result] = await db.query(
     "INSERT INTO roles (roleID, roleName, roleStatus, createdDate, roleDescription, ruleRights) VALUES (?, ?, ?, ?, ?, ?)",
     [
@@ -41,18 +42,19 @@ module.exports.createRole = async (rolesData) => {
       ruleRights,
     ]
   );
+
   return result.insertId;
 };
 
-module.exports.updateRole = async (update, id) =>{
+module.exports.updateRole = async (update, id) => {
   const {
-      roleName = req.body.roleName,
-      roleStatus = req.body.roleStatus,
-      createdDate = req.body.createdDate,
-      roleDescription = req.body.roleDescription,
-      ruleRights = req.body.ruleRights,
-
+    roleName = update.roleName,
+    roleStatus = update.roleStatus,
+    createdDate = update.createdDate,
+    roleDescription = update.roleDescription,
+    ruleRights = update.ruleRights,
   } = update;
+
   const [result] = await db.query(
     'UPDATE roles SET roleName = ?, roleStatus = ?, createdDate = ?, roleDescription = ?, ruleRights = ? WHERE roleID = ?',
     [
@@ -64,5 +66,14 @@ module.exports.updateRole = async (update, id) =>{
       id,
     ]
   );
+
   return result.affectedRows;
+};
+
+module.exports.getRoleByName = async (name) => {
+  const [records] = await db.query(
+    "SELECT * FROM roles WHERE roleName = ?",
+    [name]
+  );
+  return records;
 };

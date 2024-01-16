@@ -1,46 +1,40 @@
-import "./paySlip.css";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";  // Import html2canvas
-import React from "react";
+import html2canvas from "html2canvas";
+import { useAuth } from "../login/AuthContext";
+import './paySlip.css'
 
 const PaySlip = () => {
   const [data, setData] = useState<any>(null);
   const [searchEmployeeID, setSearchEmployeeID] = useState<any>(null);
-  const [shouldFetchDefault, setShouldFetchDefault] = useState(false);
   const pdfContainerRef = useRef<HTMLDivElement | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const Backend = `http://localhost:3306`;
+  const { token } = useAuth();
+  const Backend = "https://thaydb.vercel.app";
 
   const handleGenerate = () => {
     setErrorMessage(null);
 
-    fetch(`${Backend}/api/payslip/payslips/${searchEmployeeID}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Error: ${res.status} - ${res.statusText}`);
-        }
-        return res.json();
-      })
+    if (!searchEmployeeID) {
+      setErrorMessage("Please enter an Employee ID.");
+      return;
+    }
+
+    fetch(`${Backend}/api/payslip/${searchEmployeeID}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
       .then((responseData) => {
         const newData = Array.isArray(responseData) ? responseData : [responseData];
         setData(newData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setErrorMessage("Error fetching data. Please try again.");  // Set error message
+        setErrorMessage("Error fetching data. Please try again.");
       });
   };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchEmployeeID(e.target.value);
-    setShouldFetchDefault(true);
-  };
-
-  useEffect(() => {
-    handleGenerate();
-  }, [shouldFetchDefault]);
 
   const handleDownloadPDF = async () => {
     const pdf = new jsPDF();
@@ -49,23 +43,15 @@ const PaySlip = () => {
     if (content) {
       const payslipData = Array.isArray(data) ? data : [];
 
-      // Iterate over payslip data and add it to the PDF
       for (let i = 0; i < payslipData.length; i++) {
         if (i > 0) {
           pdf.addPage();
         }
 
-        // Convert HTML content to image using html2canvas
         const canvas = await html2canvas(content, { scale: 2 });
-
-        // Add image to PDF
         pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 10, 190, 0);
-
-        // Add additional content as needed
-       
       }
-
-      pdf.save("paySlip.pdf");
+      pdf.save(`paySlip employeeID-${searchEmployeeID}.pdf`);
     }
   };
 
@@ -77,7 +63,7 @@ const PaySlip = () => {
             type="text"
             placeholder="Enter Employee ID"
             value={searchEmployeeID}
-            onChange={handleInputChange}
+            onChange={(e) => setSearchEmployeeID(e.target.value)}
           />
           <button onClick={handleGenerate} className="btn btn-primary ms-2">
             Generate
@@ -91,7 +77,6 @@ const PaySlip = () => {
         )}
         <br></br>
         <br></br>
-       
         <div id="paySlipContainer" className="salary-slip" ref={pdfContainerRef} >
           <header className="salary-header">
             <h1 style={{ borderBottom: "1px solid #000", paddingBottom: "20px" }}>Thay Technology</h1>
@@ -118,7 +103,7 @@ const PaySlip = () => {
                         <b>DateOfJoining: {d.dateOfJoining}</b>
                       </div>
                       <div className="fs-sm text-dark text-uppercase-bold-sm px-0" style={{ fontSize: '18px' }}>
-                        <b>Number of days present: 26</b>
+                        <b>Number of days present: {d.daysPresent}</b>
                       </div>
                     </div>
                   </div>

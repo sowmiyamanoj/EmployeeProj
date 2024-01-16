@@ -1,47 +1,37 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAuth } from "../login/AuthContext";
 
 function AddRecord() {
-  const [employeeID, setEmployeeID] = useState<string>('');
   const [validationMessage, setValidationMessage] = useState<string>('');
   const [currentTime, setCurrentTime] = useState<string>('');
 
-  const  Backend =`https://thaydb.vercel.app`
-  
+  const { token } = useAuth();
+
+  const Backend = `https://thaydb.vercel.app/api`;
+
   const handleCheckIn = async () => {
-    if (!/^\d+$/.test(employeeID)) {
-      setValidationMessage('Please enter a valid Employee ID ');
-      return;
-    }
     try {
       // Perform check-in
-      await axios.post(`${Backend}/api/time/checkin`, { employeeID });
+      await axios.post(`${Backend}/time/checkin`,{},
+      { headers: {
+        Authorization: `Bearer ${token}`,
+        }});
       setValidationMessage('Checked in successfully');
     } catch (error) {
       console.error('Error checking in:', error);
-      setValidationMessage('Your Already CheckIn for Today');
+      setValidationMessage('Your Already Checked In for Today');
     }
   };
 
   const handleCheckOut = async () => {
-    const currentDate = new Date().toISOString().split('T')[0];
-    
-    try {
-      // Fetch existing check-out record for today
-      const response = await axios.get(`${Backend}/api/time/${employeeID}/${currentDate}`);
-      if (response.data.length > 0 && response.data[0].checkOutDateTime !== null) {
-        setValidationMessage('Your Already Checked Out for Today');
-        return;
-      }
-    } catch (error) {
-      console.error('Error fetching check-out details:', error);
-      setValidationMessage('Failed to check out. Please try again.');
-      return;
-    }
-  
     try {
       // Perform check-out
-      await axios.post(`${Backend}/api/time/checkout`, { employeeID });
+      await axios.post(`${Backend}/time/checkout`,{},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }});
       setValidationMessage('Checked out successfully');
     } catch (error) {
       console.error('Error checking out:', error);
@@ -59,26 +49,35 @@ function AddRecord() {
   }, []);
 
   return (
-    <div className="App d-flex justify-content-center align-items-center" style={{backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)',  minHeight: '80vh' }}>
+    <div className="App d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
       <div className="text-center">
-        <h2 className="p-4">Employee Attendance</h2>
-        <p className="mb-4">Current Time: {currentTime}</p>
+        <h2 className="p-3">Employee Attendance</h2>
+        <p className="mb-2">Current Time: {currentTime}</p>
+        <p style={{marginBottom:"20px",fontSize:"80%", opacity:"85%"}} >
+          Disclaimer: Per day, you are allowed to perform a single check-in and checkout.
+        </p>
         <div className="mb-3">
-          <input
-            type="text"
-            id="employeeID"
-            className="form-control"
-            placeholder="Enter Employee ID"
-            value={employeeID}
-            onChange={(e) => setEmployeeID(e.target.value)}
-          />
           {validationMessage && (
-            <p className={validationMessage.includes('successfully') ? 'text-success' : 'text-danger'}>{validationMessage}</p>
+            <p className={validationMessage.includes('successfully') ? 'text-success' : 'text-danger'}>
+              {validationMessage}
+            </p>
           )}
         </div>
-        <button className="btn btn-primary me-2" onClick={handleCheckIn}>Check In</button>
-        <button className="btn btn-secondary" onClick={handleCheckOut}>Check Out</button>
+        <button className="btn btn-primary me-2" onClick={handleCheckIn}>
+          Check In
+        </button>
+        <button className="btn btn-secondary" onClick={handleCheckOut}>
+          Check Out
+        </button>
+        
       </div>
+      <style>
+      {`
+        body {
+          background: linear-gradient(to right, lightblue, #ffffff);
+        }
+      `}
+    </style>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../login/AuthContext";
 
 const EditHoliday = () => {
   const { id } = useParams();
@@ -8,25 +9,24 @@ const EditHoliday = () => {
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
-
+  const { token } = useAuth();
 
   useEffect(() => {
     SetBaseUrl("https://thaydb.vercel.app");
-    axios.get(`${baseUrl}/api/holiday/${id}`)
+    axios.get(`${baseUrl}/api/holiday/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
       .then((response) => {
-        console.log("Fetched data: ", response)
-        console.log("Fetched data: ", response)
-        const holidayData = response.data[0];
-        const formattedDate = new Date(holidayData.holidayDateTime).toISOString().split('T')[0];
-        holidayData.holidayDateTime = formattedDate;
-        setHoliday(holidayData);
+        setHoliday(response.data)
       })
-      .catch((error) => {
-        console.error("Error fetching holiday data:", error);
+      .catch((error: any) => {
+        console.error("Error fetching role data:", error);
       });
   }, [id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setHoliday({ ...holiday, [name]: value });
   };
@@ -41,7 +41,7 @@ const EditHoliday = () => {
     } else if (!/^[a-zA-Z. ]+$/.test(holiday.holidayName)) {
       errors.holidayName = "Name must be uppercase letter, lowercase letters only";
     }
-    if (!holiday.holidayDateTime.trim()) {
+    if (!holiday.holidayDateTime) {
       errors.holidayDateTime = "Date cannot be empty";
     }
     setErrorMsg(errors);
@@ -53,25 +53,28 @@ const EditHoliday = () => {
     navigate("/DisplayHolidays");
   }
 
-
   const updateHoliday = (e: React.FormEvent) => {
     e.preventDefault();
     if (hasValidationErrors()) {
       console.log("Validation errors. Form not submitted.");
     } else {
-      axios.put(`${baseUrl}/api/holiday/${id}`, holiday)
-        .then((response) => {
-          console.log("Updated holiday:", response.data);
+      axios.put(`${baseUrl}/api/holiday/${id}`, holiday, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
+        .then((response: any) => {
+          console.log("Updated Holiday:", response);
           navigate('/DisplayHolidays')
         })
-        .catch((error) => {
-          console.error("Error updating holiday:", error);
+        .catch((error: any) => {
+          console.error("Error updating Role:", error);
         });
     };
   };
 
   return (
-    <div className="container border p-4 rounded mt-4" style={{ backgroundColor:'white' }}>
+    <div className="container border p-4 rounded mt-4" style={{ backgroundColor: 'white' }}>
       <h3 className="mb-4">Edit Holiday</h3>
       <form className="row g-3" onSubmit={updateHoliday}>
 
@@ -90,7 +93,7 @@ const EditHoliday = () => {
           {errorMsg.holidayName && <span style={{ color: "red" }}>{errorMsg.holidayName}</span>}
         </div>
         <div className="col-md-6">
-          <label htmlFor="hoidayDateTime" className="form-label">
+          <label htmlFor="holidayDateTime" className="form-label">
             Holiday Date
           </label>
           <input
@@ -110,12 +113,12 @@ const EditHoliday = () => {
         </div>
       </form>
       <style>
-      {`
+        {`
         body {
           background: linear-gradient(to right, lightblue, #ffffff);
         }
       `}
-    </style>
+      </style>
     </div>
   );
 };

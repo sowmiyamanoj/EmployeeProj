@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../login/AuthContext";
 
 const ReadRole = () => {
   const [data, setData] = useState<any[]>([]);
   const navigate = useNavigate();
   const [deleteId, setDeleteId] = useState(null);
-  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
+  const [baseUrl, SetBaseUrl] = useState("http://localhost:5000");
+  const { roleName, token } = useAuth();
+  const isAdmin = roleName === "admin";
 
   function getData() {
-    SetBaseUrl("https://thaydb.vercel.app");
-    fetch(`${baseUrl}/api/roles`)
+    SetBaseUrl("http://localhost:5000");
+    fetch(`${baseUrl}/api/roles`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -29,11 +36,13 @@ const ReadRole = () => {
   const cancelDelete = () => {
     setDeleteId(null);
   }
-  
+
 
   const executeDelete = (id: string) => {
     fetch(`${baseUrl}/api/roles/` + id, {
-      method: "DELETE"
+      method: "DELETE", headers: {
+        Authorization: `Bearer ${token}`,
+      }
     })
       .then(() => {
         getData();
@@ -49,14 +58,14 @@ const ReadRole = () => {
 
   useEffect(() => {
     getData();
-  }, [data]);
+  }, []);
 
   return (
     <>
       <div className="d-flex align-items-end flex-column" style={{ backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)' }}>
-        <button className="btn btn-info mt-3 me-4" onClick={AddRole}> + Add Role</button>
+        {isAdmin && <button className="btn btn-info mt-3 me-4" onClick={AddRole}> + Add Role</button>}
       </div>
-      <div style={{  backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)', minHeight: "100vh",padding: "50px" }}>
+      <div style={{ backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)', minHeight: "100vh", padding: "50px" }}>
         <table className="table table-hover table-bordered table-striped text-center">
           <thead>
             <tr>
@@ -66,34 +75,38 @@ const ReadRole = () => {
               <th>Rule Rights</th>
               <th>Created Date</th>
               <th>Role Description</th>
-              <th>Action</th>
-              
+              {isAdmin &&
+                <th>Action</th>
+              }
+
             </tr>
           </thead>
           <tbody className="table-group-divider">
             {data.map((d, i) => (
               <tr key={i}>
                 <td>{d.roleID}</td>
-                <td>{d.roleName }</td>
-                <td>{d.roleStatus }</td>
-                <td>{d.ruleRights }</td>
-                <td>{d.createdDate }</td>
-                <td>{d.roleDescription }</td>
-                <td className="d-flex justify-content-evenly">
-                  <input
-                    type="button"
-                    className="btn btn-success"
-                    onClick={() => updateRole(d.roleID)}
-                    value="Edit"
-                  />
-                  <br />
-                  <input
-                    type="button"
-                    className="btn btn-danger me-2"
-                    onClick={() => confirmDelete(d.roleID)}
-                    value="Delete"
-                  />
-                </td>
+                <td>{d.roleName}</td>
+                <td>{d.roleStatus}</td>
+                <td>{d.ruleRights}</td>
+                <td>{d.createdDate}</td>
+                <td>{d.roleDescription}</td>
+                {isAdmin &&
+                  <td className="d-flex justify-content-evenly">
+                    <input
+                      type="button"
+                      className="btn btn-success"
+                      onClick={() => updateRole(d.roleID)}
+                      value="Edit"
+                    />
+                    <br />
+                    <input
+                      type="button"
+                      className="btn btn-danger me-2"
+                      onClick={() => confirmDelete(d.roleID)}
+                      value="Delete"
+                    />
+                  </td>
+                }
               </tr>
             ))}
           </tbody>

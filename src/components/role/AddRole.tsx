@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Select from 'react-select';
+import { useAuth } from "../login/AuthContext";
 
 
 interface RoleProps{
@@ -34,10 +36,11 @@ const navigate = useNavigate();
 const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
 const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
+const { token } = useAuth();
+
 
 const hasValidationErrors = () => {
-  const errors: Record<string, string> = {};
-
+  const errors: Record<string, string> = {};
 
   if (!role.roleName.trim()) {
     errors.roleName = "Name cannot be empty";
@@ -54,7 +57,6 @@ const hasValidationErrors = () => {
   if (!role.roleStatus.trim()) {
     errors.roleStatus = "status cannot be empty";
   }
-
   if (!role.roleDescription) {
     errors.roleDescription = "Description cannot be empty";
   }
@@ -74,7 +76,9 @@ const handleSubmit = async (e: React.FormEvent) => {
       console.log("Validation errors. Form not submitted.");
     } else {
     axios
-      .post(`${baseUrl}/api/roles/`, role)
+      .post(`${baseUrl}/api/roles/`, role, { headers: {
+        Authorization: `Bearer ${token}`,
+      }})
       .then((res: any) => {
         console.log(res);
         })
@@ -86,10 +90,24 @@ const handleSubmit = async (e: React.FormEvent) => {
         SetBaseUrl("https://thaydb.vercel.app");
         setIsSubmitDisabled(hasValidationErrors());
       }, [role,opr]);
-    
-    
+      
+      const options = [
+        { value: 'Attendance', label: 'Attendance' },
+        { value: 'EmpList', label: 'EmpList' },
+        { value: 'HolidayList', label: 'HolidayList' },
+        { value: 'AttendanceSheet', label: 'AttendanceSheet' },
+        { value: 'Contact', label: 'ContactUs' },
+        { value: 'About', label: 'About' },
+        { value: 'ViewOnly', label: 'ViewOnly' },
+      ];
+
+      const handleMultiSelectChange = (selectedOptions: any) => {
+        const selectedValues = selectedOptions.map((option: any) => option.value).join(', ');
+        setRole({ ...role, ruleRights: selectedValues });
+    };    
+      
   return(
-    <div className="container border rounded p-4 mt-5" style={{ backgroundColor:'white' }}>
+    <div className="container border rounded p-4 mt-5">
       <h3 className="mb-4">Role Registration</h3>
       <form className="row col-xxl" onSubmit={handleSubmit}>
         <div className="col-md-6">
@@ -124,13 +142,13 @@ const handleSubmit = async (e: React.FormEvent) => {
           <label htmlFor="ruleRigths" className="form-label">
             Rule Rights
           </label>
-          <input
-            type="text"
-            className="form-control"
+          <Select
             id="ruleRights"
             name="ruleRights"
-            value={role.ruleRights}
-            onChange={handleChange}
+            value={options.filter((option) => role.ruleRights.includes(option.value))}
+            onChange={handleMultiSelectChange}
+            options={options}
+            isMulti
           />
            {errorMsg.ruleRights  && <span style={{ color: "red" }}>{errorMsg.ruleRights}</span>}
         </div>
@@ -182,22 +200,14 @@ const handleSubmit = async (e: React.FormEvent) => {
      
 
         <div className="p-5 text-center">
-        <button type="submit" className="btn bg-primary text-white" disabled={isSubmitDisabled}>
+        <button type="submit" className="btn btn-success" disabled={isSubmitDisabled}>
           Submit
         </button>
         </div>
       </form>
-      <style>
-      {`
-        body {
-          background: linear-gradient(to right, lightblue, #ffffff);
-        }
-      `}
-    </style>
     </div>
 );
   };
 
 
 export default RoleForm;
-
