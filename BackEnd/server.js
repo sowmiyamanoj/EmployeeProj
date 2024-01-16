@@ -1,60 +1,54 @@
+// server.js
+
 const express = require('express');
 const app = express();
-const cors = require("cors")
-require('express-async-errors'),
-bodyparser = require('body-parser');
-const db = require('./config/db');
+const cors = require('cors');
+require('express-async-errors');
+const sendEmail = require('./contactUs');
+const { authenticateToken } = require('./middleware/authMiddleware');
+const { handleErrors } = require('./middleware/errorMiddleware');
+
+// Import route controllers
+const authRoutes = require('./controllers/authController');
 const employeeRoutes = require('./controllers/employeeController');
 const rolesRoutes = require('./controllers/roleController');
 const holidayRoutes = require('./controllers/holidayController');
-const timeRoutes=require('./controllers/timeController');
-const sendEmail = require('./contactUs');
+const timeRoutes = require('./controllers/timeController');
 const payslipRoutes = require('./controllers/payslipController');
 
-app.use(cors())
-app.use(express.json())
+// Import password-related routes
+const passwordRoutes = require('./controllers/passwordController'); // Make sure this line is present
 
-app.use('/api/employee', employeeRoutes);
-app.use((err,req,res,next) => {
-  console.log(err)
-  res.status(err.status || 500).send('Something went wrong!')
-})
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-app.use('/api/roles', rolesRoutes);
-app.use((err,req,res,next) => {
-  console.log(err)
-  res.status(err.status || 500).send('Something went wrong!')
-})
+// Use authentication middleware for routes under '/api/auth'
+app.use('/api/auth', authRoutes);
 
-app.use('/api/holiday', holidayRoutes);
-app.use((err,req,res,next) => {
-  console.log(err)
-  res.status(err.status || 500).send('Something went wrong!')
-})
+// Use authentication middleware for protected routes
+app.use('/api/employee', authenticateToken, employeeRoutes);
+app.use('/api/roles', authenticateToken, rolesRoutes);
+app.use('/api/holiday', authenticateToken, holidayRoutes);
+app.use('/api/time', authenticateToken, timeRoutes);
+app.use('/api/payslip', authenticateToken, payslipRoutes);
 
-app.use('/api/time',timeRoutes);
-app.use((err,req,res,next) => {
-  console.log(err)
-  res.status(err.status || 500).send('Something went wrong!')
-})
-app.use(cors())
-app.use(express.json())
-app.use('/api/payslip', payslipRoutes);
-app.use((err,req,res,next) => {
-  console.log(err)
-  res.status(err.status || 500).send('Something went wrong!')
-})
+// Use password routes
+app.use('/api/password', authenticateToken, passwordRoutes); // Make sure this line is present
 
+// Handle Errors middleware should be placed last
+app.use(handleErrors);
 
-
-app.get("/email", (req, res) => {
+app.get('/email', (req, res) => {
   sendEmail(req.query)
     .then((response) => res.send(response.message))
     .catch((error) => res.status(500).send(error.message));
 });
 
-db.query("SELECT 1")
-.then(() => {console.log('db connection succeeded')
-app.listen(5000,
-  () => console.log ('server started at 5000'))})
-.catch(err => console.log('db connection failed. \n' + err))
+// Server start
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+module.exports = app;
