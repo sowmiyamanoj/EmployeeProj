@@ -4,7 +4,7 @@ const db = require("../config/db");
 // Function to generate a payslip for an employee
 module.exports.generatePaySlip = async (employeeId) => {
   try {
-    const [results] = await db.query("SELECT employeeID, employeeName, employeeAge, employeeDOJ, employeeRemarks,employeeAcuredLeaves FROM employee WHERE employeeID = ?", [employeeId]);
+    const [results] = await db.query("SELECT employeeID, employeeName, employeeAge, employeeDOJ, employeeRemarks,employeeAccruedLeaves FROM employee WHERE employeeID = ?", [employeeId]);
 
     if (results.length > 0) {
       const employee = results[0];
@@ -14,10 +14,10 @@ module.exports.generatePaySlip = async (employeeId) => {
 
       const basicSalary = dailySalary;
       const totalWorkingDays = 26;
-      const daysPresent = calculateDaysPresent(totalWorkingDays, employee.employeeAcuredLeaves);
+      const daysPresent = calculateDaysPresent(totalWorkingDays, employee.employeeAccruedLeaves);
       const monthlySalary = calculateNetSalary(basicSalary);
       const bonusSalary = calculateBonusSalary(basicSalary);
-      const leaveDeduction = calculateLeaveDeduction(employee.employeeAcuredLeaves);
+      const leaveDeduction = calculateLeaveDeduction(employee.employeeAccruedLeaves);
       const pfAmount = calculatePFAmount(basicSalary);
       const hraAmount = calculateHRA(basicSalary);
 
@@ -32,7 +32,7 @@ module.exports.generatePaySlip = async (employeeId) => {
         //leaveDeduction: leaveDeduction,
         pfAmount: pfAmount,
         hraAmount: hraAmount,
-        //daysPresent: daysPresent,
+        daysPresent: daysPresent,
         netSalary: monthlySalary + bonusSalary - leaveDeduction - pfAmount + hraAmount,
       };
 
@@ -57,7 +57,7 @@ function calculateBonusSalary(salary) {
 }
 
 // Function to calculate leave deduction
-function calculateLeaveDeduction(employeeAcuredLeaves) {
+function calculateLeaveDeduction(employeeAccruedLeaves) {
   // Assuming 26 working days in a month
   const totalWorkingDays = 26;
   
@@ -65,7 +65,7 @@ function calculateLeaveDeduction(employeeAcuredLeaves) {
   const dailySalary = 600;
 
   // Calculate total deduction for all leave days in the month
-  const totalDeduction = employeeAcuredLeaves * dailySalary;
+  const totalDeduction = employeeAccruedLeaves * dailySalary;
 
   return totalDeduction;
 }
@@ -83,8 +83,8 @@ function calculateHRA(salary) {
 }
 
 // Function to calculate the number of days present
-function calculateDaysPresent(totalWorkingDays, employeeAcuredLeaves) {
-  return totalWorkingDays - employeeAcuredLeaves;
+function calculateDaysPresent(totalWorkingDays, employeeAccruedLeaves) {
+  return totalWorkingDays - employeeAccruedLeaves;
 }
 
 // Function to format date

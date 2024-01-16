@@ -1,19 +1,84 @@
-const db = require("../config/db");
+// employeeService.js
 
-module.exports.getAllEmployees = async () => {
-  const [records] = await db.query("SELECT * FROM employee");
-  return records;
+const db = require('../config/db');
+const bcrypt = require('bcrypt');
+
+const createEmployee = async (employeeData) => {
+  try {
+    const {
+      employeeID,
+      employeeName,
+      employeeAge,
+      employeeGender,
+      employeeDOJ,
+      employeeRemarks,
+      employeeAccruedLeaves,
+      email,
+      roleName,
+      password, // Plain text password
+    } = employeeData;
+
+    // Use a default password if not provided
+    const providedPassword = password || 'password@123';
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(providedPassword, 10);
+
+    const [result] = await db.query(
+      "INSERT INTO employee (employeeID, employeeName, employeeAge, employeeGender, employeeDOJ, employeeRemarks, employeeAccruedLeaves, email, roleName, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        employeeID,
+        employeeName,
+        employeeAge,
+        employeeGender,
+        employeeDOJ,
+        employeeRemarks,
+        employeeAccruedLeaves,
+        email,
+        roleName,
+        hashedPassword, // Store the hashed password
+      ]
+    );
+
+    return result.insertId;
+  } catch (error) {
+    console.error('Error in createEmployee:', error.message);
+    throw error;
+  }
 };
 
-module.exports.getEmployeesID = async (id) => {
+const getUserByEmail = async (email) => {
+  const [records] = await db.query("SELECT * FROM employee WHERE email = ?", [email]);
+  return records[0];
+};
+
+const getUserByEmployeeID = async (employeeID) => {
   const [records] = await db.query(
     "SELECT * FROM employee WHERE employeeID = ?",
+    [employeeID]
+  );
+  return records[0];
+};
+
+const getAllEmployees = async () => {
+  try {
+    const [records] = await db.query("SELECT employeeID, employeeName, employeeAge, employeeGender, employeeDOJ, employeeRemarks, employeeAccruedLeaves, email, roleName FROM employee");
+    return records;
+  } catch (error) {
+    console.error('Error in getAllEmployees:', error.message);
+    throw error;
+  }
+};
+
+const getEmployeeByID = async (id) => {
+  const [records] = await db.query(
+    "SELECT employeeID, employeeName, employeeAge, employeeGender, employeeDOJ, employeeRemarks, employeeAccruedLeaves, email, password, roleName FROM employee WHERE employeeID = ?",
     [id]
   );
   return records;
 };
 
-module.exports.deleteEmployee = async (id) => {
+const deleteEmployee = async (id) => {
   const [{ affectedRows }] = await db.query(
     "DELETE FROM employee WHERE employeeID = ?",
     [id]
@@ -21,7 +86,7 @@ module.exports.deleteEmployee = async (id) => {
   return affectedRows;
 };
 
-module.exports.createEmployee = async (employeeData) => {
+const updateEmployee = async (update, id) => {
   const {
     employeeID,
     employeeName,
@@ -29,11 +94,12 @@ module.exports.createEmployee = async (employeeData) => {
     employeeGender,
     employeeDOJ,
     employeeRemarks,
-    employeeAcuredLeaves,
-    roleID,
-  } = employeeData;
+    employeeAccruedLeaves,
+    roleName,
+  } = update;
+
   const [result] = await db.query(
-    "INSERT INTO employee (employeeID, employeeName, employeeAge,employeeGender,employeeDOJ,employeeRemarks,employeeAcuredLeaves,roleID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    'UPDATE employee SET employeeID =?, employeeName = ?, employeeAge = ?, employeeGender = ?, employeeDOJ = ?, employeeRemarks = ?, employeeAccruedLeaves = ?, roleName = ? WHERE employeeID = ?',
     [
       employeeID,
       employeeName,
@@ -41,35 +107,29 @@ module.exports.createEmployee = async (employeeData) => {
       employeeGender,
       employeeDOJ,
       employeeRemarks,
-      employeeAcuredLeaves,
-      roleID,
-    ]
-  );
-  return result.insertId;
-};
-
-module.exports.updateEmployee = async (update, id) =>{
-  const {
-    employeeName = req.body.employeeName,
-    employeeAge = req.body.employeeAge,
-    employeeGender = req.body.employeeGender,
-    employeeDOJ = req.body.employeeDOJ,
-    employeeRemarks = req.body.employeeRemarks,
-    employeeAcuredLeaves = req.body.employeeAcuredLeaves,
-    roleID = req.body.roleID,
-  } = update;
-  const [result] = await db.query(
-    'UPDATE employee SET employeeName = ?, employeeAge = ?, employeeGender = ?, employeeDOJ = ?, employeeRemarks = ?,employeeAcuredLeaves = ?, roleID = ? WHERE employeeID = ?',
-    [
-      employeeName,
-      employeeAge,
-      employeeGender,
-      employeeDOJ,
-      employeeRemarks,
-      employeeAcuredLeaves,
-      roleID,
+      employeeAccruedLeaves,
+      roleName,
       id,
     ]
   );
   return result.affectedRows;
+};
+
+const getRoleByroleName = async (roleName) => {
+  const [records] = await db.query(
+    "SELECT * FROM roles WHERE roleName = ?",
+    [roleName]
+  );
+  return records[0];
+};
+
+module.exports = {
+  getUserByEmail,
+  getUserByEmployeeID,
+  getAllEmployees,
+  getEmployeeByID,
+  deleteEmployee,
+  createEmployee,
+  updateEmployee,
+  getRoleByroleName,
 };
