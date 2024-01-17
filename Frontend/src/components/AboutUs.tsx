@@ -24,7 +24,7 @@ const AboutUs = () => {
             <div className="card bg-light p-3 m-0 shadow">
               <div className="row gy-3 gy-md-0 align-items-md-center">
                 <div className="col-md-5">
-                  <img src="src/components/images/full-stack-web-developer.svg" alt="" className="img-fluid img-thumbnail" />
+                  <img src="/full-stack-web-developer.svg"  alt="" className="img-fluid img-thumbnail" />
                 </div>
                 <div className="col-md-7">
                   <div className="card-body p-0">
@@ -39,7 +39,7 @@ const AboutUs = () => {
             <div className="card bg-light p-3 m-0 shadow">
               <div className="row gy-3 gy-md-0 align-items-md-center">
                 <div className="col-md-5">
-                  <img src="src/components/images/software-development.svg" alt="" className="img-fluid rounded-start" />
+                  <img src="/software-development.svg" alt="" className="img-fluid rounded-start" />
                 </div>
                 <div className="col-md-7">
                   <div className="card-body p-0">
