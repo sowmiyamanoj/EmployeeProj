@@ -38,6 +38,9 @@ const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
 const { token } = useAuth();
 
+const backbutton = () => {
+  navigate(-1);
+};
 
 const hasValidationErrors = () => {
   const errors: Record<string, string> = {};
@@ -92,10 +95,11 @@ const handleSubmit = async (e: React.FormEvent) => {
       }, [role,opr]);
       
       const options = [
-        { value: 'Attendance', label: 'Attendance' },
+      
         { value: 'EmpList', label: 'EmpList' },
         { value: 'HolidayList', label: 'HolidayList' },
-        { value: 'AttendanceSheet', label: 'AttendanceSheet' },
+        { value: 'attendanceSheet', label: 'AttendanceSheet' },
+        { value: 'Attendance', label: 'Attendance' },
         { value: 'Contact', label: 'ContactUs' },
         { value: 'About', label: 'About' },
         { value: 'ViewOnly', label: 'ViewOnly' },
@@ -203,6 +207,9 @@ const handleSubmit = async (e: React.FormEvent) => {
         <button type="submit" className="btn btn-success" disabled={isSubmitDisabled}>
           Submit
         </button>
+        <button type="submit" className="btn bg-danger text-white ms-3" onClick = {backbutton}>
+            back
+          </button>
         </div>
       </form>
     </div>

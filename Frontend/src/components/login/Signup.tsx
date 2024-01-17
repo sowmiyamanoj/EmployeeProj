@@ -17,9 +17,6 @@ const SignUp: React.FC = () => {
       setErrorMessage('Please fill in all fields.');
       return;
     }
-    if(email){
-      setErrorMessage("The email ID already exists.")
-    }
 
     if (password !== confirmPassword) {
       setErrorMessage('Passwords do not match.');
@@ -44,6 +41,8 @@ const SignUp: React.FC = () => {
           setErrorMessage(data.message);
           console.log('User registered successfully');
           navigate('/login');
+        } else {
+          setErrorMessage("The email ID already exists.")
         }
       })
       .catch((error) => {
