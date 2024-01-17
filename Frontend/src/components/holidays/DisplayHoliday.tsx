@@ -62,7 +62,7 @@ const DisplayHoliday = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [data]);
   return (
     <>
       <div className="d-flex align-items-end flex-column" style={{ backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)' }}>

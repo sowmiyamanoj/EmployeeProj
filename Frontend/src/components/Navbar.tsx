@@ -78,7 +78,7 @@ const CustomNavbar = () => {
             </>
           )}
           {!isLoggedIn && (
-            <Nav.Link as={NavLink} to="/login" className="p-3">
+            <Nav.Link as={NavLink} onClick={handleNavClick} to="/login" className="p-3">
               Login
             </Nav.Link>
           )}

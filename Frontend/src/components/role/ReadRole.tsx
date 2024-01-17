@@ -6,12 +6,12 @@ const ReadRole = () => {
   const [data, setData] = useState<any[]>([]);
   const navigate = useNavigate();
   const [deleteId, setDeleteId] = useState(null);
-  const [baseUrl, SetBaseUrl] = useState("http://localhost:5000");
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
   const { roleName, token } = useAuth();
   const isAdmin = roleName === "admin";
 
   function getData() {
-    SetBaseUrl("http://localhost:5000");
+    SetBaseUrl("");
     fetch(`${baseUrl}/api/roles`, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -58,7 +58,7 @@ const ReadRole = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [data]);
 
   return (
     <>

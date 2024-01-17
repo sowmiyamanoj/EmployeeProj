@@ -10,11 +10,11 @@ const EditRole: React.FC = () => {
   const [role, setRole] = useState<any>({});
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
-  const [baseUrl, SetBaseUrl] = useState("http://localhost:5000");
+  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
   const { token } = useAuth();
 
   useEffect(() => {
-    SetBaseUrl("http://localhost:5000");
+    SetBaseUrl("https://thaydb.vercel.app");
     axios.get(`${baseUrl}/api/roles/${id}`,
       {
         headers: {

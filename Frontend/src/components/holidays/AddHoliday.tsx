@@ -63,9 +63,12 @@ export default function HolidayForm() {
         .catch((err) => console.log(err));
     }
   };
+  const backbutton = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
-    SetBaseUrl("http://localhost:5000");
+    SetBaseUrl("https://thaydb.vercel.app");
     setIsSubmitDisabled(hasValidationErrors());
   }, [holiday, opr]);
 
@@ -107,6 +110,10 @@ export default function HolidayForm() {
         </div>
         <div className="p-5 text-center">
           <button type="submit" className="btn bg-primary text-white " disabled={isSubmitDisabled}>Submit</button>
+
+          <button type="submit" className="btn bg-danger text-white ms-3" onClick = {backbutton}>
+            back
+          </button>
         </div>
       </form>
       <style>

@@ -61,7 +61,7 @@ const DisplayEmployee = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [data]);
 
   return (
     <>
