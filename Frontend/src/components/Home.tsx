@@ -34,7 +34,7 @@ function Home() {
     <div style={containerStyle}>
       <div style={imageContainerStyle}>
         <img
-          src="/src/components/images/web-des.svg"
+          src="/web-des.svg" 
           alt="Description"
           style={imageStyle}
         />
