@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../login/AuthContext";
+import AlertMessage from "../AlertMessage";
 
 
 interface EmployeeProps {
@@ -35,6 +36,7 @@ export default function EmployeeForm() {
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState<string>('');
   const {token} = useAuth();
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
@@ -116,7 +118,10 @@ export default function EmployeeForm() {
         )
         .then((res) => {
           console.log(res);
+          setSuccessMessage('New employee registered successfully.'); 
+          setTimeout(() => {
           navigate("/DisplayEmployees");
+        }, 2000);
         })
         .catch((err) => console.log(err));
     }
@@ -298,6 +303,13 @@ export default function EmployeeForm() {
           </button>
         </div>
       </form>
+      {successMessage && (
+        <AlertMessage
+          message={successMessage}
+          type="success"
+          onClose={() => setSuccessMessage('')}
+        />
+      )}
       <style>
       {`
         body {

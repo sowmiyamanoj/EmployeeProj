@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../login/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import AlertMessage from "../AlertMessage";
 
 const ReadEmployees: React.FC = () => {
   const { id } = useParams();
@@ -13,6 +14,8 @@ const ReadEmployees: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showChangePassword, setShowChangePassword] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState<string>('');
+
   const { roleName, token } = useAuth();
   const isAdmin = roleName === "admin";
   const issuperuser = roleName === "superuser";
@@ -94,6 +97,7 @@ const ReadEmployees: React.FC = () => {
           setShowChangePassword(false);
           setNewPassword("");
           setConfirmPassword("");
+          setSuccessMessage('Password Changed successfully.'); 
         })
         .catch((error) => {
           console.error("Error changing password:", error);
@@ -206,6 +210,13 @@ const ReadEmployees: React.FC = () => {
                 </div>
               </div>
             )}
+            {successMessage && (
+        <AlertMessage
+          message={successMessage}
+          type="success"
+          onClose={() => setSuccessMessage('')}
+        />
+      )}
           </div>
         </div>
         {deleteId && (

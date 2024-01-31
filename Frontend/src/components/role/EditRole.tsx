@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from 'react-select';
 import { useAuth } from "../login/AuthContext";
+import AlertMessage from "../AlertMessage";
 
 
 const EditRole: React.FC = () => {
@@ -10,6 +11,8 @@ const EditRole: React.FC = () => {
   const [role, setRole] = useState<any>({});
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState<string>('');
+
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
   const { token } = useAuth();
 
@@ -76,7 +79,7 @@ const EditRole: React.FC = () => {
   const BackRole = () => {
     navigate("/ReadRole");
   }
-  
+
 
   const updateRole = (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,9 +87,9 @@ const EditRole: React.FC = () => {
       console.log("Validation errors. Form not submitted.");
     } else {
       const stringValue = role.ruleRights.map((option: any) => option.value).join(', ');
-    const updatedRole = { ...role, ruleRights: stringValue };
-    
-      axios.put(`${baseUrl}/api/roles/${id}`,updatedRole,
+      const updatedRole = { ...role, ruleRights: stringValue };
+
+      axios.put(`${baseUrl}/api/roles/${id}`, updatedRole,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -94,7 +97,10 @@ const EditRole: React.FC = () => {
         })
         .then((response) => {
           console.log("Updated Role:", response.data);
-          navigate('/ReadRole')
+          setSuccessMessage('Role updated successfully.');
+          setTimeout(() => {
+            navigate("/ReadRole");
+          }, 2000);
         })
         .catch((error) => {
           console.error("Error updating Role:", error);
@@ -113,7 +119,7 @@ const EditRole: React.FC = () => {
   ];
   const handleMultiSelectChange = (selectedOptions: any) => {
     setRole({ ...role, ruleRights: selectedOptions });
-};
+  };
 
   return (
     <div className="container border rounded p-4 mt-4">
@@ -213,6 +219,13 @@ const EditRole: React.FC = () => {
           <button type="reset" className="btn btn-danger " onClick={BackRole}>Back</button>
         </div>
       </form>
+      {successMessage && (
+        <AlertMessage
+          message={successMessage}
+          type="success"
+          onClose={() => setSuccessMessage('')}
+        />
+      )}
     </div>
   );
 };

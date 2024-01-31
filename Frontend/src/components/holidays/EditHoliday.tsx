@@ -2,12 +2,15 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../login/AuthContext";
+import AlertMessage from "../AlertMessage";
 
 const EditHoliday = () => {
   const { id } = useParams();
   const [holiday, setHoliday] = useState<any>({});
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState<string>('');
+
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
   const { token } = useAuth();
 
@@ -63,9 +66,11 @@ const EditHoliday = () => {
           Authorization: `Bearer ${token}`,
         }
       })
-        .then((response: any) => {
-          console.log("Updated Holiday:", response);
-          navigate('/DisplayHolidays')
+        .then(() => {
+          setSuccessMessage('Holiday updated successfully.'); 
+          setTimeout(() => {
+            navigate("/DisplayHolidays");
+          }, 2000);
         })
         .catch((error: any) => {
           console.error("Error updating Role:", error);
@@ -112,6 +117,13 @@ const EditHoliday = () => {
           <button type="button" className="btn btn-danger" onClick={Backholiday}>Back</button>
         </div>
       </form>
+      {successMessage && (
+        <AlertMessage
+          message={successMessage}
+          type="success"
+          onClose={() => setSuccessMessage('')}
+        />
+      )}
       <style>
         {`
         body {

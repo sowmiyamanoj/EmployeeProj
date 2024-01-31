@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../login/AuthContext";
+import AlertMessage from '../AlertMessage';
 
 interface HolidayProps {
   holidayName: string;
@@ -14,7 +15,7 @@ export default function HolidayForm() {
     holidayDateTime: "",
 
   });
-  const { opr } = useParams();
+
   const navigate = useNavigate();
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
   const { token } = useAuth();
@@ -25,6 +26,7 @@ export default function HolidayForm() {
   };
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const hasValidationErrors = () => {
     const errors: Record<string, string> = {};
@@ -58,7 +60,11 @@ export default function HolidayForm() {
         }})
         .then((res) => {
           console.log(res);
-          navigate("/DisplayHolidays");
+          setSuccessMessage('Holiday registered successfully.'); 
+          setTimeout(() => {
+            navigate("/DisplayHolidays");
+          }, 2000);
+          
         })
         .catch((err) => console.log(err));
     }
@@ -70,7 +76,7 @@ export default function HolidayForm() {
   useEffect(() => {
     SetBaseUrl("https://thaydb.vercel.app");
     setIsSubmitDisabled(hasValidationErrors());
-  }, [holiday, opr]);
+  }, [holiday]);
 
   return (
     <div className="container border rounded p-4 mt-5 " style={{ backgroundColor:'white' }}>
@@ -94,7 +100,7 @@ export default function HolidayForm() {
         </div>
 
         <div className="col-6">
-          <label htmlFor="hoidayDateTime" className="form-label">
+        <label htmlFor="holidayDateTime" className="form-label">
             Holiday Date
           </label>
           <input
@@ -111,11 +117,19 @@ export default function HolidayForm() {
         <div className="p-5 text-center">
           <button type="submit" className="btn bg-primary text-white " disabled={isSubmitDisabled}>Submit</button>
 
-          <button type="submit" className="btn bg-danger text-white ms-3" onClick = {backbutton}>
+          <button type="button" className="btn bg-danger text-white ms-3" onClick = {backbutton}>
             back
           </button>
         </div>
       </form>
+
+      {successMessage && (
+        <AlertMessage
+          message={successMessage}
+          type="success"
+          onClose={() => setSuccessMessage('')}
+        />
+      )}
       <style>
       {`
         body {
@@ -126,5 +140,3 @@ export default function HolidayForm() {
     </div>
   );
 }
-
-
