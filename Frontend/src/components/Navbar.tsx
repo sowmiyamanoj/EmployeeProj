@@ -141,11 +141,11 @@ const CustomNavbar = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '14px',
-          fontWeight: 'bold',
+          fontSize: '15px',
+          fontWeight: 'normal',
         }}
       >
-        {employee.employeeName && employee.employeeName.charAt(0)}
+        {employee.employeeName && employee.employeeName.charAt(0).toUpperCase()}
       </div>
     )}
   </div>
