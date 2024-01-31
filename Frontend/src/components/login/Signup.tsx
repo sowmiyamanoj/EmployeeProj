@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './login.css';
+import AlertMessage from '../AlertMessage';
 
 const SignUp: React.FC = () => {
   const [employeeName, setEmployeeName] = useState<string>('');
@@ -8,6 +9,7 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,10 +41,12 @@ const SignUp: React.FC = () => {
       .then((data) => {
         if (data.message) {
           setErrorMessage(data.message);
-          console.log('User registered successfully');
-          navigate('/login');
+          setSuccessMessage('Registered successfully.');
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
         } else {
-          setErrorMessage("The email ID already exists.")
+          setErrorMessage('The email ID already exists.');
         }
       })
       .catch((error) => {
@@ -97,14 +101,12 @@ const SignUp: React.FC = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
-
-            {errorMessage && <div className="text-danger">{errorMessage}</div>}
-
             <div className="d-grid">
               <button type="submit" className="btn btn-primary">
                 Sign Up
               </button>
             </div>
+
             <p className="forgot-password text-right">
               Already registered
               <Link className="link-signin ms-1" to={'/login'}>
@@ -112,15 +114,29 @@ const SignUp: React.FC = () => {
               </Link>
             </p>
           </form>
+          {successMessage && (
+            <AlertMessage
+              message={successMessage}
+              type="success"
+              onClose={() => setSuccessMessage('')}
+            />
+          )}
+          {errorMessage && (
+            <AlertMessage
+              message={errorMessage}
+              type="error"
+              onClose={() => setErrorMessage('')}
+            />
+          )}
         </div>
       </div>
       <style>
-      {`
-        body {
-          background: linear-gradient(to right, lightblue, #ffffff);
-        }
-      `}
-    </style>
+        {`
+          body {
+            background: linear-gradient(to right, lightblue, #ffffff);
+          }
+        `}
+      </style>
     </div>
   );
 };

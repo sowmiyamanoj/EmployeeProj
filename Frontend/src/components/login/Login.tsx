@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import './login.css';
-import { useAuth } from './AuthContext'; 
+import { useAuth } from './AuthContext';
+import AlertMessage from '../AlertMessage';
 
 const Login: React.FC = () => {
   const [email, setemail] = useState<string>('');
@@ -11,7 +12,7 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false); // State to toggle password visibility
   const [errorMessage, setErrorMessage] = useState<string>('');
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,7 +91,6 @@ const Login: React.FC = () => {
                   {showPassword ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
                 </button>
               </div>
-              {errorMessage && <div className="text-danger">{errorMessage}</div>}
             </div>
             <div className="d-grid">
               <button type="submit" className="btn btn-primary">
@@ -98,23 +98,29 @@ const Login: React.FC = () => {
               </button>
             </div>
 
-              <p className="forgot-password text-right">
-                New Registration
-                <Link className="link ms-1" to={'/signup'}>
-                  Sign Up
-                </Link>
-              </p>
-              
+            <p className="forgot-password text-right">
+              New Registration
+              <Link className="link ms-1" to={'/signup'}>
+                Sign Up
+              </Link>
+            </p>
           </form>
+          {errorMessage && (
+            <AlertMessage
+              message={errorMessage}
+              type="error"
+              onClose={() => setErrorMessage('')}
+            />
+          )}
         </div>
       </div>
       <style>
-      {`
+        {`
         body {
           background: linear-gradient(to right, lightblue, #ffffff);
         }
       `}
-    </style>
+      </style>
     </div>
   );
 };

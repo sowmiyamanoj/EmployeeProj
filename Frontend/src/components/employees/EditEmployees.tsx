@@ -2,38 +2,42 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../login/AuthContext";
+import AlertMessage from "../AlertMessage";
 
 const EditEmployee = () => {
   const { id } = useParams();
   const [employee, setEmployee] = useState<any>({});
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState<string>('');
+
   const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
   const { token } = useAuth();
 
   useEffect(() => {
     SetBaseUrl("https://thaydb.vercel.app");
-    axios.get(`${baseUrl}/api/employee/${id}`,{
+    axios.get(`${baseUrl}/api/employee/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
-      }})
-        .then((response) => {
-            const employeeData = response.data[0];
-            setEmployee(employeeData)
-        })
-        .catch((error: any) => {
-            console.error("Error fetching role data:", error);
-        });
-}, [id]);
+      }
+    })
+      .then((response) => {
+        const employeeData = response.data[0];
+        setEmployee(employeeData)
+      })
+      .catch((error: any) => {
+        console.error("Error fetching role data:", error);
+      });
+  }, [id]);
 
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setEmployee({ ...employee, [name]: value });
   };
-  
+
   const hasValidationErrors = () => {
-    const errors: Record<string, string> = {};
+    const errors: Record<string, string> = {};
 
     if (!employee.employeeName.trim()) {
       errors.employeeName = "Name cannot be empty";
@@ -47,9 +51,9 @@ const EditEmployee = () => {
     } else if (!/^\d+$/.test(employee.employeeID)) {
       errors.employeeID = "ID must be a number";
     }
-    if(!employee.employeeAge){
-      errors.employeeAge ="Age connect be empty"
-    }else if (!/^(1[8-9]|[2-7]\d|80)$/.test(employee.employeeAge)) {
+    if (!employee.employeeAge) {
+      errors.employeeAge = "Age connect be empty"
+    } else if (!/^(1[8-9]|[2-7]\d|80)$/.test(employee.employeeAge)) {
       errors.employeeAge = "Age not Valid";
     }
     if (!employee.employeeDOJ) {
@@ -69,7 +73,7 @@ const EditEmployee = () => {
     if (!employee.employeeGender) {
       errors.employeeGender = "Gender cannot be empty";
     }
-    if(!employee.roleName){
+    if (!employee.roleName) {
       errors.roleName = "roleName cannot be empty"
     }
 
@@ -80,31 +84,35 @@ const EditEmployee = () => {
   const backEmployee = () => {
     navigate(-1);
   };
-  
 
-  
+
+
   const updateEmployee = (e: React.FormEvent) => {
     e.preventDefault();
     if (hasValidationErrors()) {
-        console.log("Validation errors. Form not submitted.");
-      } else {
-    axios.put(`${baseUrl}/api/employee/${id}`, employee,{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }})
+      console.log("Validation errors. Form not submitted.");
+    } else {
+      axios.put(`${baseUrl}/api/employee/${id}`, employee, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
         .then((response: any) => {
-            console.log("Updated Employee:", response);
-            navigate('/DisplayEmployees')
+          console.log("Updated Employee:", response);
+          setSuccessMessage('Employee updated successfully.');
+          setTimeout(() => {
+            navigate("/DisplayEmployees");
+          }, 2000);
         })
         .catch((error: any) => {
-            console.error("Error updating Role:", error);
+          console.error("Error updating Role:", error);
         });
-};
+    };
   };
 
 
   return (
-    <div className="container border rounded p-4 mt-5" style={{ backgroundColor:'white' }}>
+    <div className="container border rounded p-4 mt-5" style={{ backgroundColor: 'white' }}>
       <h3 className="mb-4">Employee Registration</h3>
       <form className="row col-xxl" onSubmit={updateEmployee}>
         <div className="col-md-6">
@@ -137,7 +145,7 @@ const EditEmployee = () => {
           {errorMsg && <span style={{ color: "red" }}>{errorMsg.employeeName}</span>}
         </div>
         <div className="col-md-6">
-        <label htmlFor="employeeAge" className="form-label">
+          <label htmlFor="employeeAge" className="form-label">
             Employee Age
           </label>
           <input
@@ -228,19 +236,26 @@ const EditEmployee = () => {
             <option>guest</option>
           </select>
           {errorMsg && (<span style={{ color: 'red' }}>{errorMsg.roleName}</span>)}
-          </div>
+        </div>
         <div className="col-12 text-center mt-4">
           <button type="submit" className="btn btn-info me-3">Update</button>
           <button type="reset" className="btn btn-danger " onClick={backEmployee}>Back</button>
         </div>
       </form>
+      {successMessage && (
+        <AlertMessage
+          message={successMessage}
+          type="success"
+          onClose={() => setSuccessMessage('')}
+        />
+      )}
       <style>
-      {`
+        {`
         body {
           background: linear-gradient(to right, lightblue, #ffffff);
         }
       `}
-    </style>
+      </style>
     </div>
   );
 };

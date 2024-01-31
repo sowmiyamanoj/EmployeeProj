@@ -33,22 +33,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const navigate = useNavigate(); // Get history object
 
-  useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      try {
-        const decodedToken: any = jwtDecode(token);
-        setEmployeeID(decodedToken.employeeID);
-        setRoleName(decodedToken.roleName);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error('Error decoding token:', error);
-        logout();
-      }
-    } else {
-      setIsLoggedIn(false);
+ useEffect(() => {
+  const token = Cookies.get('token');
+  if (token) {
+    try {
+      const decodedToken: any = jwtDecode(token);
+      setEmployeeID(decodedToken.employeeID);
+      setRoleName(decodedToken.roleName);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      logout();
     }
-  }, []);
+  } else {
+    logout();
+  }
+}, []);
 
   const login = (token: string) => {
     Cookies.set('token', token, { expires: 1/24 });
@@ -68,7 +68,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoggedIn(false);
     setEmployeeID(null);
     setRoleName(null);
-    navigate('/login'); // Redirect to the login page
+    navigate('/'); // Redirect to the login page
   };
 
   return (
