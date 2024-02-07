@@ -40,7 +40,6 @@ const SignUp: React.FC = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.message) {
-          setErrorMessage(data.message);
           setSuccessMessage('Registered successfully.');
           setTimeout(() => {
             navigate("/login");
@@ -114,7 +113,16 @@ const SignUp: React.FC = () => {
               </Link>
             </p>
           </form>
-          {successMessage && (
+        </div>
+      </div>
+      <style>
+        {`
+          body {
+            background: linear-gradient(to right, lightblue, #ffffff);
+          }
+        `}
+      </style>
+      {successMessage && (
             <AlertMessage
               message={successMessage}
               type="success"
@@ -128,15 +136,6 @@ const SignUp: React.FC = () => {
               onClose={() => setErrorMessage('')}
             />
           )}
-        </div>
-      </div>
-      <style>
-        {`
-          body {
-            background: linear-gradient(to right, lightblue, #ffffff);
-          }
-        `}
-      </style>
     </div>
   );
 };

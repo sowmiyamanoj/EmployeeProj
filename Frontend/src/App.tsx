@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DisplayEmployee from './components/employees/DisplayEmployees'
-import Navbar from './components/Navbar';
+import Navbar from './components/nav/Navbar';
 import Home from './components/Home';
 import AddEmployees from './components/employees/AddEmployees';
 import EditEmployee from './components/employees/EditEmployees';

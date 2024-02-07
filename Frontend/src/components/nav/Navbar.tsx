@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Nav, Navbar } from "react-bootstrap";
-import { useAuth } from '../components/login/AuthContext';
+import { useAuth } from '../login/AuthContext';
 import axios from "axios";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import ProfileModal from './ProfileModal';
 
 const CustomNavbar = () => {
   const [expanded, setExpanded] = useState(false);
   const [employee, setEmployee] = useState<any>({});
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const { isLoggedIn, logout, roleName, token, employeeID } = useAuth();
-  const navigate = useNavigate();
 
   const employeecall = () => {
     const baseUrl = (`https://thaydb.vercel.app`);
@@ -41,7 +42,7 @@ const CustomNavbar = () => {
   const handleLogoutClick = () => {
     setExpanded(false);
     logout();
-    navigate('/login');
+    // Navigate removed as per the request
   };
 
   const renderTooltip = (props: any) => (
@@ -53,20 +54,18 @@ const CustomNavbar = () => {
 
   return (
     <>
-      <Navbar expand="lg" expanded={expanded} style={{justifyContent:'flex-end',borderBottom: "1px solid #ccc", backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)' }}>
+      <Navbar expand="lg" expanded={expanded} style={{borderBottom: "1px solid #ccc", backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)' }}>
 
-        
-        <Navbar.Brand as={NavLink} onClick={handleNavClick} to="/" style={{position:'sticky', right:520}} className="p-2 ml-auto" >
-          <h3 style={{ fontFamily: 'Times New Roman", Times, serif' }}> THAY TECHNOLOGIES</h3>
-          <h5 style={{ fontFamily: 'Times New Roman", Times, serif' }}> Private Limited</h5>
+
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" className="m-1" onClick={() => setExpanded(!expanded)} />
+        <Navbar.Brand as={NavLink} onClick={handleNavClick} to="/" className="p-2" >
+          <h4 style={{ fontFamily: 'Times New Roman", Times, serif' }}> THAY TECHNOLOGIES</h4>
+          <h6 style={{ fontFamily: 'Times New Roman", Times, serif' }}> Private Limited</h6>
         </Navbar.Brand>
-
-        {/* Toggle Button */}
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" className="m-3" onClick={() => setExpanded(!expanded)} />
 
         {/* Collapsible Content */}
         <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
-          <Nav>
+          <Nav style={{ fontSize: 15 }}>
 
             {isLoggedIn && (roleName === 'admin' || roleName === 'superuser') && (
               <>
@@ -121,37 +120,51 @@ const CustomNavbar = () => {
             )}
           </Nav>
         </Navbar.Collapse>
-
-        {/* Profile Icon */}
-        <OverlayTrigger
-          placement="bottom"
-          delay={{ show: 250, hide: 400 }}
-          overlay={renderTooltip}
-        >
-          <Navbar.Brand className='ms-2 me-3 justify-content-end' as={NavLink} onClick={handleNavClick} to={`/ReadEmployee/${employeeID}`}>
-  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-    {isLoggedIn && (
-      <div
-        style={{
-          width: '32px',
-          height: '32px',
-          borderRadius: '50%',
-          background: '#1b5954',
-          color: '#fff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '15px',
-          fontWeight: 'normal',
-        }}
-      >
-        {employee.employeeName && employee.employeeName.charAt(0).toUpperCase()}
-      </div>
-    )}
-  </div>
-</Navbar.Brand>
-        </OverlayTrigger>
+            
+            {/* Profile Icon */}
+        <div onClick={() => setShowProfileModal(true)}>
+          {isLoggedIn && (
+          <OverlayTrigger
+            placement="bottom"
+            delay={{ show: 250, hide: 400 }}
+            overlay={renderTooltip}
+          >
+            <Navbar.Brand className='ms-2 me-3 justify-content-end' onClick={handleNavClick}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+               
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      background: '#1b5954',
+                      color: '#fff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '15px',
+                      fontWeight: 'normal',
+                    }}
+                  >
+                    {employee.employeeName &&
+                      `${employee.employeeName.charAt(0).toUpperCase()}${employee.employeeName.includes(' ')
+                        ? employee.employeeName.split(' ')[1].charAt(0).toUpperCase()
+                        : ''
+                      }`}
+                  </div>
+              </div>
+            </Navbar.Brand>
+          </OverlayTrigger>
+                )}
+        </div>
       </Navbar>
+
+      {/* Profile Modal */}
+      <ProfileModal
+        show={showProfileModal}
+        onHide={() => setShowProfileModal(false)}
+        profileDetails={employee}
+      />
     </>
   );
 };
